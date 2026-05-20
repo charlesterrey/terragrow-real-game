@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Real Game — Build Dependency Graph</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a2e; color: #e0e0e0; overflow: hidden;
+  }
+  #canvas-container { width: 100vw; height: 100vh; position: relative; }
+  svg { width: 100%; height: 100%; }
+
+  /* Sidebar */
+  #sidebar {
+    position: fixed; right: 0; top: 0; width: 340px; height: 100vh;
+    background: #16213e; border-left: 2px solid #0f3460;
+    padding: 24px; overflow-y: auto; z-index: 10;
+    transform: translateX(100%); transition: transform 0.3s ease;
+  }
+  #sidebar.open { transform: translateX(0); }
+  #sidebar h2 { font-size: 16px; color: #fff; margin-bottom: 4px; }
+  #sidebar .phase-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600; margin-bottom: 12px; color: #fff;
+  }
+  #sidebar .detail-label { font-size: 11px; color: #8892b0; text-transform: uppercase; letter-spacing: 1px; margin-top: 14px; }
+  #sidebar .detail-value { font-size: 13px; color: #ccd6f6; margin-top: 4px; line-height: 1.5; }
+  #sidebar .dep-list { list-style: none; margin-top: 6px; }
+  #sidebar .dep-list li {
+    font-size: 12px; padding: 4px 8px; margin: 3px 0; border-radius: 4px;
+    background: rgba(255,255,255,0.05); color: #a8b2d1;
+  }
+  #sidebar .close-btn {
+    position: absolute; top: 12px; right: 12px; background: none; border: none;
+    color: #8892b0; font-size: 20px; cursor: pointer;
+  }
+  #sidebar .close-btn:hover { color: #fff; }
+  #sidebar .file-path {
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;
+    background: rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 4px;
+    margin-top: 6px; color: #64ffda;
+  }
+
+  /* Header */
+  #header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+    background: linear-gradient(180deg, #1a1a2e 60%, transparent);
+    padding: 16px 24px 40px;
+  }
+  #header h1 { font-size: 18px; color: #fff; font-weight: 700; }
+  #header p { font-size: 12px; color: #8892b0; margin-top: 4px; }
+
+  /* Legend */
+  #legend {
+    position: fixed; bottom: 16px; left: 16px; z-index: 5;
+    display: flex; gap: 16px; align-items: center;
+    background: rgba(22,33,62,0.9); padding: 10px 16px; border-radius: 8px;
+    border: 1px solid #0f3460;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #a8b2d1; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Session badges */
+  #sessions {
+    position: fixed; bottom: 16px; right: 16px; z-index: 5;
+    display: flex; gap: 8px;
+  }
+  .session-btn {
+    padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(22,33,62,0.9);
+    color: #a8b2d1; cursor: pointer; transition: all 0.2s;
+  }
+  .session-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .session-btn.active { border-color: #64ffda; color: #64ffda; }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed; background: #16213e; border: 1px solid #0f3460;
+    padding: 8px 12px; border-radius: 6px; font-size: 11px;
+    color: #ccd6f6; pointer-events: none; z-index: 20;
+    opacity: 0; transition: opacity 0.15s;
+    max-width: 200px;
+  }
+  .tooltip.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>🌾 The Real Game — Build Dependency Graph</h1>
+  <p>Cliquez sur un nœud pour voir les détails. Survolez les arêtes pour voir les dépendances.</p>
+</div>
+
+<div id="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#2D5016"></div>Phase 1 — Données</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#D4A843"></div>Phase 2 — Moteur</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>Phase 3 — Vues</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8B6914"></div>Phase 4 — Finitions</div>
+  <div class="legend-item" style="margin-left:12px; border-left: 1px solid #0f3460; padding-left: 12px;">
+    <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#64ffda" stroke-width="2"/></svg>⚡ Parallélisable
+  </div>
+  <div class="legend-item">
+    <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4,3"/></svg>Chemin critique
+  </div>
+</div>
+
+<div id="sessions">
+  <button class="session-btn" data-session="1" onclick="highlightSession(1)">Session 1</button>
+  <button class="session-btn" data-session="2" onclick="highlightSession(2)">Session 2</button>
+  <button class="session-btn" data-session="3" onclick="highlightSession(3)">Session 3</button>
+  <button class="session-btn" data-session="0" onclick="highlightSession(0)">Tout afficher</button>
+</div>
+
+<div id="sidebar">
+  <button class="close-btn" onclick="closeSidebar()">✕</button>
+  <div id="sidebar-content"></div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div id="canvas-container">
+<svg id="graph" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="7" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 3.5 L 0 7 z" fill="#4a5568"/>
+    </marker>
+    <marker id="arrowhead-crit" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="7" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 3.5 L 0 7 z" fill="#ff6b6b"/>
+    </marker>
+    <marker id="arrowhead-highlight" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="7" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 3.5 L 0 7 z" fill="#64ffda"/>
+    </marker>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.4)"/>
+    </filter>
+  </defs>
+</svg>
+</div>
+
+<script>
+// ============================================================
+// DATA MODEL — All nodes and edges
+// ============================================================
+const NODES = [
+  // Phase 1 — Données
+  { id: "1.1", label: "referentiel-prix", phase: 1, session: 1, size: "S",
+    file: "data/referentiel-prix.js",
+    detail: "Prix intrants/vente sur 3 ans, aides PAC. Source : 01-REGLES-METIER.md",
+    deps: [], parallel: ["1.2","1.4","1.5","1.6"] },
+  { id: "1.2", label: "10 exploitations", phase: 1, session: 1, size: "M",
+    file: "data/exploitations/*.js",
+    detail: "Profil complet : identité, assolement 3 ans, matériel, emprunts, charges structure. Source : fichiers expl-*.md",
+    deps: [], parallel: ["1.1","1.4","1.5","1.6"] },
+  { id: "1.3", label: "30 grands livres", phase: 1, session: 1, size: "L",
+    file: "data/grands-livres/*.js",
+    detail: "⚠️ GROS — 10 exploitations × 3 ans. 120-200 écritures comptables par fichier. Risque de dépasser le contexte Claude Code.",
+    deps: ["1.1","1.2"], parallel: [] },
+  { id: "1.4", label: "scenarios", phase: 1, session: 1, size: "S",
+    file: "data/scenarios.js",
+    detail: "6 scénarios prédéfinis (Ormuz, sécheresse, gel, effondrement marché, interdiction phyto, composite 2024) avec multiplicateurs.",
+    deps: [], parallel: ["1.1","1.2","1.5","1.6"] },
+  { id: "1.5", label: "leviers-conseil", phase: 1, session: 1, size: "M",
+    file: "data/leviers-conseil.js",
+    detail: "15-20 leviers d'action filtrés par région/type : charges opé, méca, assolement, commercialisation, risques, financier, structure.",
+    deps: [], parallel: ["1.1","1.2","1.4","1.6"] },
+  { id: "1.6", label: "itk-regionaux", phase: 1, session: 1, size: "M",
+    file: "data/itk-regionaux.js",
+    detail: "ITK détaillés par culture par région (semences, engrais, phytos, méca €/ha). Alimente le moteur CdP et les fiches Session 1.",
+    deps: [], parallel: ["1.1","1.2","1.4","1.5"] },
+
+  // Phase 2 — Moteur
+  { id: "2.0", label: "state.js", phase: 2, session: 2, size: "S",
+    file: "js/state.js",
+    detail: "Gestion d'état + persistance localStorage. Sauvegarde : exploitation, scénario, leviers, assolement modifié, nom étudiant. Restauration auto.",
+    deps: [], parallel: ["1.1","1.2","1.4","1.5","1.6"] },
+  { id: "2.1", label: "couts-production", phase: 2, session: 2, size: "M",
+    file: "js/engine/couts-production.js",
+    detail: "Calcul CdP par culture : charges opé (depuis ITK) + méca + structure + rémunération MO − coproduits → €/ha et €/t + seuil commercialisation.",
+    deps: ["1.3","1.6"], parallel: ["2.2"] },
+  { id: "2.2", label: "sig.js", phase: 2, session: 2, size: "S",
+    file: "js/engine/sig.js",
+    detail: "Calcul des SIG depuis le grand livre : produit brut → marge brute → EBE → résultat exploitation → RCAI.",
+    deps: ["1.3"], parallel: ["2.1"] },
+  { id: "2.3", label: "simulation.js", phase: 2, session: 2, size: "M",
+    file: "js/engine/simulation.js",
+    detail: "Applique les multiplicateurs d'un scénario et recalcule TOUT : CdP, SIG, trésorerie, delta en € et %.",
+    deps: ["2.1","1.4"], parallel: ["2.4"] },
+  { id: "2.4", label: "conseil.js", phase: 2, session: 2, size: "M",
+    file: "js/engine/conseil.js",
+    detail: "Applique les leviers sélectionnés + assolement modifié. Recalcule CdP, SIG, trésorerie. Compare avant/après. Combinable avec scénario.",
+    deps: ["2.1","1.5"], parallel: ["2.3"] },
+  { id: "2.5", label: "tresorerie.js", phase: 2, session: 2, size: "M",
+    file: "js/engine/tresorerie.js",
+    detail: "⚠️ CRITIQUE — Plan de trésorerie mensuel (juil→juin). Encaissements vs décaissements. BFR max. Comparaison avant/après scénario et conseil.",
+    deps: ["2.1","1.3"], parallel: [] },
+  { id: "2.6", label: "resilience.js", phase: 2, session: 2, size: "S",
+    file: "js/engine/resilience.js",
+    detail: "Score 0-100 : trésorerie min (25%), annuités/EBE (25%), diversification Shannon (15%), marge de sécurité (20%), charges fixes (15%).",
+    deps: ["2.1","2.3"], parallel: [] },
+
+  // Phase 3 — Vues
+  { id: "3.1", label: "Accueil", phase: 3, session: 2, size: "S",
+    file: "js/views/accueil.js",
+    detail: "Carte de France SVG avec 5 régions cliquables. 10 cartes exploitation (SAU, région, score résilience).",
+    deps: ["1.2"], parallel: ["3.2","3.3","3.4","3.5","3.8","3.9"] },
+  { id: "3.2", label: "Dashboard", phase: 3, session: 2, size: "M",
+    file: "js/views/tableau-bord.js",
+    detail: "KPI (EBE, RCAI, tréso, annuités/EBE) + jauges colorées + donut assolement + sélecteur année N-2/N-1/N.",
+    deps: ["2.1","2.2"], parallel: ["3.3","3.4","3.5","3.8","3.9"] },
+  { id: "3.3", label: "Grand Livre", phase: 3, session: 2, size: "M",
+    file: "js/views/grand-livre.js",
+    detail: "Table HTML complète avec filtres : compte, journal, date, analytique, recherche texte. Tri par colonne. Export CSV.",
+    deps: ["1.3"], parallel: ["3.1","3.2","3.4","3.5","3.8","3.9"] },
+  { id: "3.4", label: "SIG", phase: 3, session: 2, size: "S",
+    file: "js/views/sig.js",
+    detail: "Tableau SIG + graphique waterfall (produit brut → RCAI). Comparaison 3 ans en barres groupées.",
+    deps: ["2.2"], parallel: ["3.1","3.2","3.3","3.5","3.8","3.9"] },
+  { id: "3.5", label: "Coûts Production", phase: 3, session: 2, size: "M",
+    file: "js/views/couts-production.js",
+    detail: "Tableau CdP par culture + barres empilées (décomposition) + graphique CdP/t vs prix de vente (ligne seuil).",
+    deps: ["2.1"], parallel: ["3.1","3.2","3.3","3.4","3.8","3.9"] },
+  { id: "3.6", label: "Simulateur ⚠️", phase: 3, session: 2, size: "L",
+    file: "js/views/simulateur.js",
+    detail: "⚠️ VUE CENTRALE — Dropdown scénario + sliders + résultats avant/après + courbe trésorerie (2 lignes) + verdict survie/cessation.",
+    deps: ["2.3","2.5","2.6"], parallel: ["3.7"] },
+  { id: "3.7", label: "Mode Conseil", phase: 3, session: 2, size: "L",
+    file: "js/views/conseil.js",
+    detail: "Sélection leviers (filtrés région) + assolement éditable + résultats avant/après + courbe trésorerie 3 lignes + score résilience.",
+    deps: ["2.4","2.5","2.6"], parallel: ["3.6"] },
+  { id: "3.8", label: "Trésorerie", phase: 3, session: 2, size: "M",
+    file: "js/views/tresorerie.js",
+    detail: "Tableau 12 mois (juil→juin) + graphique ligne cumulée + mois rouges si négatif + BFR max + superposition avant/après.",
+    deps: ["2.5"], parallel: ["3.1","3.2","3.3","3.4","3.5","3.9"] },
+  { id: "3.9", label: "Comparaison", phase: 3, session: 2, size: "M",
+    file: "js/views/comparaison.js",
+    detail: "Sélection 2-4 exploitations. Radar superposé + barres groupées + tableau comparatif.",
+    deps: ["2.1","2.2"], parallel: ["3.1","3.2","3.3","3.4","3.5","3.8"] },
+  { id: "3.10", label: "Rapport PDF", phase: 3, session: 2, size: "M",
+    file: "js/views/rapport.js",
+    detail: "10 pages imprimables : page de garde (nom étudiant), diagnostic, CdP, tréso, simulation, recommandations, verdict. Canvas → img avant print.",
+    deps: ["3.6","3.7"], parallel: [] },
+  { id: "3.11", label: "Fiches Session 1", phase: 3, session: 2, size: "S",
+    file: "js/views/fiches-session1.js",
+    detail: "Fiches imprimables calcul à la main (fiche exploitation + ITK + feuille vierge). Bouton batch pour imprimer les 10 jeux d'un coup.",
+    deps: ["1.2","1.6"], parallel: [] },
+
+  // Phase 4 — Finitions
+  { id: "4.1", label: "Navigation + Sidebar", phase: 4, session: 3, size: "S",
+    file: "js/app.js + css/styles.css",
+    detail: "Sidebar : logo, champ nom/binôme, exploitation, année, liens vues, indicateur scénario+leviers, bouton réinitialiser. Responsive tablette.",
+    deps: ["3.6","3.7","2.0"], parallel: ["4.2","4.3"] },
+  { id: "4.2", label: "README", phase: 4, session: 3, size: "S",
+    file: "README.md",
+    detail: "Déploiement GitHub Pages, ouverture locale (double-clic), guide du prof (5 sessions), progression pédagogique.",
+    deps: [], parallel: ["4.1","4.3"] },
+  { id: "4.3", label: "CSS Print + Responsive", phase: 4, session: 3, size: "S",
+    file: "css/styles.css",
+    detail: "@media print : masquer sidebar, page-break-before pour chaque section rapport. Responsive 1024px+, scroll horizontal tableaux.",
+    deps: ["3.10","3.11"], parallel: ["4.1","4.2"] },
+];
+
+const EDGES = [
+  // Phase 1 internal
+  { from: "1.1", to: "1.3", critical: true },
+  { from: "1.2", to: "1.3", critical: true },
+  // Phase 1 → Phase 2
+  { from: "1.3", to: "2.1", critical: true },
+  { from: "1.3", to: "2.2" },
+  { from: "1.3", to: "2.5" },
+  { from: "1.6", to: "2.1" },
+  { from: "1.4", to: "2.3" },
+  { from: "1.5", to: "2.4" },
+  // Phase 2 internal
+  { from: "2.1", to: "2.3", critical: true },
+  { from: "2.1", to: "2.4" },
+  { from: "2.1", to: "2.5" },
+  { from: "2.1", to: "2.6" },
+  { from: "2.3", to: "2.6" },
+  // Phase 2 → Phase 3
+  { from: "1.2", to: "3.1" },
+  { from: "2.1", to: "3.2" },
+  { from: "2.2", to: "3.2" },
+  { from: "1.3", to: "3.3" },
+  { from: "2.2", to: "3.4" },
+  { from: "2.1", to: "3.5" },
+  { from: "2.3", to: "3.6", critical: true },
+  { from: "2.5", to: "3.6" },
+  { from: "2.6", to: "3.6" },
+  { from: "2.4", to: "3.7" },
+  { from: "2.5", to: "3.7" },
+  { from: "2.6", to: "3.7" },
+  { from: "2.5", to: "3.8" },
+  { from: "2.1", to: "3.9" },
+  { from: "2.2", to: "3.9" },
+  { from: "3.6", to: "3.10", critical: true },
+  { from: "3.7", to: "3.10" },
+  { from: "1.2", to: "3.11" },
+  { from: "1.6", to: "3.11" },
+  // Phase 3 → Phase 4
+  { from: "3.6", to: "4.1" },
+  { from: "3.7", to: "4.1" },
+  { from: "2.0", to: "4.1" },
+  { from: "3.10", to: "4.3" },
+  { from: "3.11", to: "4.3" },
+];
+
+// ============================================================
+// LAYOUT — Position nodes in a clean DAG
+// ============================================================
+const PHASE_COLORS = { 1: "#2D5016", 2: "#D4A843", 3: "#3B82F6", 4: "#8B6914" };
+const PHASE_LABELS = { 1: "Données", 2: "Moteur", 3: "Vues", 4: "Finitions" };
+const SIZE_RADIUS = { S: 32, M: 38, L: 45 };
+
+// Layout positions (manually tuned for clarity)
+const POSITIONS = {
+  // Phase 1 — Row 0 (y=100) and Row 1 (y=210)
+  "1.1": { x: 100, y: 100 }, "1.2": { x: 250, y: 100 }, "1.4": { x: 400, y: 100 },
+  "1.5": { x: 550, y: 100 }, "1.6": { x: 700, y: 100 },
+  "1.3": { x: 175, y: 210 },
+  // Phase 2 — Row 2 (y=320) and Row 3 (y=430)
+  "2.0": { x: 700, y: 210 },
+  "2.1": { x: 175, y: 330 }, "2.2": { x: 325, y: 330 },
+  "2.3": { x: 175, y: 440 }, "2.4": { x: 350, y: 440 }, "2.5": { x: 525, y: 440 }, "2.6": { x: 700, y: 440 },
+  // Phase 3 — Row 4 (y=560) and Row 5 (y=660)
+  "3.1": { x: 60, y: 555 }, "3.2": { x: 180, y: 555 }, "3.3": { x: 300, y: 555 },
+  "3.4": { x: 420, y: 555 }, "3.5": { x: 540, y: 555 }, "3.8": { x: 660, y: 555 }, "3.9": { x: 780, y: 555 },
+  "3.6": { x: 160, y: 665 }, "3.7": { x: 360, y: 665 }, "3.10": { x: 560, y: 665 }, "3.11": { x: 760, y: 665 },
+  // Phase 4 — Row 6 (y=780)
+  "4.1": { x: 250, y: 775 }, "4.2": { x: 475, y: 775 }, "4.3": { x: 700, y: 775 },
+};
+
+// ============================================================
+// RENDERING
+// ============================================================
+const svg = document.getElementById('graph');
+const tooltip = document.getElementById('tooltip');
+let activeSession = 0;
+let selectedNode = null;
+
+function render() {
+  // Clear
+  svg.querySelectorAll('.edge, .node-group, .phase-label, .parallel-indicator').forEach(el => el.remove());
+
+  // Phase backgrounds
+  const phaseRows = [
+    { phase: 1, y1: 60, y2: 255, label: "PHASE 1" },
+    { phase: 2, y1: 265, y2: 490, label: "PHASE 2" },
+    { phase: 3, y1: 500, y2: 720, label: "PHASE 3" },
+    { phase: 4, y1: 730, y2: 825, label: "PHASE 4" },
+  ];
+  phaseRows.forEach(p => {
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", 10); rect.setAttribute("y", p.y1);
+    rect.setAttribute("width", 870); rect.setAttribute("height", p.y2 - p.y1);
+    rect.setAttribute("rx", 8); rect.setAttribute("fill", PHASE_COLORS[p.phase]);
+    rect.setAttribute("opacity", "0.06"); rect.setAttribute("class", "phase-label");
+    svg.appendChild(rect);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", 855); text.setAttribute("y", p.y1 + 20);
+    text.setAttribute("text-anchor", "end"); text.setAttribute("font-size", "10");
+    text.setAttribute("fill", PHASE_COLORS[p.phase]); text.setAttribute("opacity", "0.5");
+    text.setAttribute("font-weight", "600"); text.setAttribute("class", "phase-label");
+    text.textContent = p.label + " — " + PHASE_LABELS[p.phase];
+    svg.appendChild(text);
+  });
+
+  // Draw edges
+  EDGES.forEach(edge => {
+    const from = POSITIONS[edge.from];
+    const to = POSITIONS[edge.to];
+    if (!from || !to) return;
+
+    const fromNode = NODES.find(n => n.id === edge.from);
+    const toNode = NODES.find(n => n.id === edge.to);
+    const fromR = SIZE_RADIUS[fromNode.size] || 32;
+    const toR = SIZE_RADIUS[toNode.size] || 32;
+
+    // Calculate edge start/end points on circle perimeters
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const nx = dx / dist;
+    const ny = dy / dist;
+
+    const x1 = from.x + nx * fromR;
+    const y1 = from.y + ny * fromR;
+    const x2 = to.x - nx * (toR + 6);
+    const y2 = to.y - ny * (toR + 6);
+
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+    line.setAttribute("class", "edge");
+    line.setAttribute("data-from", edge.from);
+    line.setAttribute("data-to", edge.to);
+
+    const dimmed = activeSession > 0 && (fromNode.session !== activeSession && toNode.session !== activeSession);
+
+    if (edge.critical) {
+      line.setAttribute("stroke", dimmed ? "rgba(255,107,107,0.1)" : "#ff6b6b");
+      line.setAttribute("stroke-width", dimmed ? "1" : "2");
+      line.setAttribute("stroke-dasharray", "6,4");
+      line.setAttribute("marker-end", dimmed ? "" : "url(#arrowhead-crit)");
+    } else {
+      line.setAttribute("stroke", dimmed ? "rgba(74,85,104,0.1)" : "#4a5568");
+      line.setAttribute("stroke-width", "1.5");
+      line.setAttribute("marker-end", dimmed ? "" : "url(#arrowhead)");
+    }
+
+    svg.appendChild(line);
+  });
+
+  // Draw nodes
+  NODES.forEach(node => {
+    const pos = POSITIONS[node.id];
+    if (!pos) return;
+    const r = SIZE_RADIUS[node.size] || 32;
+    const color = PHASE_COLORS[node.phase];
+    const dimmed = activeSession > 0 && node.session !== activeSession;
+
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("class", "node-group");
+    g.setAttribute("data-id", node.id);
+    g.style.cursor = "pointer";
+    g.style.opacity = dimmed ? "0.15" : "1";
+    g.style.transition = "opacity 0.3s";
+
+    // Circle
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", pos.x); circle.setAttribute("cy", pos.y);
+    circle.setAttribute("r", r); circle.setAttribute("fill", color);
+    circle.setAttribute("stroke", selectedNode === node.id ? "#64ffda" : "rgba(255,255,255,0.15)");
+    circle.setAttribute("stroke-width", selectedNode === node.id ? "3" : "1.5");
+    if (selectedNode === node.id) circle.setAttribute("filter", "url(#glow)");
+    g.appendChild(circle);
+
+    // ID text
+    const idText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    idText.setAttribute("x", pos.x); idText.setAttribute("y", pos.y - 5);
+    idText.setAttribute("text-anchor", "middle"); idText.setAttribute("font-size", "13");
+    idText.setAttribute("font-weight", "700"); idText.setAttribute("fill", "white");
+    idText.textContent = node.id;
+    g.appendChild(idText);
+
+    // Label text
+    const labelText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    labelText.setAttribute("x", pos.x); labelText.setAttribute("y", pos.y + 10);
+    labelText.setAttribute("text-anchor", "middle"); labelText.setAttribute("font-size", "8.5");
+    labelText.setAttribute("fill", "rgba(255,255,255,0.8)");
+    // Truncate label
+    const maxChars = node.size === "S" ? 10 : 14;
+    const lbl = node.label.length > maxChars ? node.label.substring(0, maxChars) + "…" : node.label;
+    labelText.textContent = lbl;
+    g.appendChild(labelText);
+
+    // Size badge
+    const badgeX = pos.x + r - 6;
+    const badgeY = pos.y - r + 6;
+    const badge = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    badge.setAttribute("cx", badgeX); badge.setAttribute("cy", badgeY);
+    badge.setAttribute("r", 8);
+    badge.setAttribute("fill", node.size === "L" ? "#ff6b6b" : node.size === "M" ? "#fbbf24" : "#34d399");
+    g.appendChild(badge);
+    const badgeText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    badgeText.setAttribute("x", badgeX); badgeText.setAttribute("y", badgeY + 4);
+    badgeText.setAttribute("text-anchor", "middle"); badgeText.setAttribute("font-size", "9");
+    badgeText.setAttribute("font-weight", "700"); badgeText.setAttribute("fill", "#1a1a2e");
+    badgeText.textContent = node.size;
+    g.appendChild(badgeText);
+
+    // Events
+    g.addEventListener('click', () => openSidebar(node));
+    g.addEventListener('mouseenter', (e) => showTooltip(e, node));
+    g.addEventListener('mouseleave', hideTooltip);
+
+    svg.appendChild(g);
+  });
+
+  // Parallel indicators
+  const parallelGroups = [
+    { ids: ["1.1","1.2","1.4","1.5","1.6"], y: 65, label: "5 en parallèle" },
+    { ids: ["2.1","2.2"], y: 295, label: "2 en parallèle" },
+    { ids: ["2.3","2.4"], y: 405, label: "2 en parallèle" },
+    { ids: ["3.1","3.2","3.3","3.4","3.5","3.8","3.9"], y: 520, label: "7 en parallèle" },
+    { ids: ["3.6","3.7"], y: 630, label: "2 en parallèle" },
+    { ids: ["4.1","4.2","4.3"], y: 740, label: "3 en parallèle" },
+  ];
+  parallelGroups.forEach(pg => {
+    const positions = pg.ids.map(id => POSITIONS[id]).filter(Boolean);
+    if (positions.length < 2) return;
+    const minX = Math.min(...positions.map(p => p.x)) - 15;
+    const maxX = Math.max(...positions.map(p => p.x)) + 15;
+
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", minX); line.setAttribute("y1", pg.y);
+    line.setAttribute("x2", maxX); line.setAttribute("y2", pg.y);
+    line.setAttribute("stroke", "#64ffda"); line.setAttribute("stroke-width", "1.5");
+    line.setAttribute("stroke-dasharray", "3,3"); line.setAttribute("opacity", "0.4");
+    line.setAttribute("class", "parallel-indicator");
+    svg.appendChild(line);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", (minX + maxX) / 2); text.setAttribute("y", pg.y - 5);
+    text.setAttribute("text-anchor", "middle"); text.setAttribute("font-size", "9");
+    text.setAttribute("fill", "#64ffda"); text.setAttribute("opacity", "0.5");
+    text.setAttribute("class", "parallel-indicator");
+    text.textContent = "⚡ " + pg.label;
+    svg.appendChild(text);
+  });
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function openSidebar(node) {
+  selectedNode = node.id;
+  render();
+
+  const color = PHASE_COLORS[node.phase];
+  const deps = node.deps.length ? node.deps.map(d => {
+    const dn = NODES.find(n => n.id === d);
+    return `<li>${d} — ${dn ? dn.label : ''}</li>`;
+  }).join('') : '<li>Aucune (peut démarrer immédiatement)</li>';
+
+  const dependants = EDGES.filter(e => e.from === node.id).map(e => {
+    const dn = NODES.find(n => n.id === e.to);
+    return `<li>${e.to} — ${dn ? dn.label : ''}${e.critical ? ' 🔴' : ''}</li>`;
+  }).join('') || '<li>Aucun (nœud terminal)</li>';
+
+  const parallel = node.parallel.length ? node.parallel.map(p => {
+    const pn = NODES.find(n => n.id === p);
+    return `<li>⚡ ${p} — ${pn ? pn.label : ''}</li>`;
+  }).join('') : '<li>Aucun</li>';
+
+  document.getElementById('sidebar-content').innerHTML = `
+    <h2>${node.id} — ${node.label}</h2>
+    <span class="phase-badge" style="background:${color}">Phase ${node.phase} — ${PHASE_LABELS[node.phase]}</span>
+    <span class="phase-badge" style="background:#0f3460; margin-left: 6px;">Session ${node.session}</span>
+    <span class="phase-badge" style="background:${node.size === 'L' ? '#ff6b6b' : node.size === 'M' ? '#fbbf24' : '#34d399'}; color: #1a1a2e; margin-left: 6px;">Taille ${node.size}</span>
+
+    <p class="detail-label">Fichier</p>
+    <div class="file-path">${node.file}</div>
+
+    <p class="detail-label">Description</p>
+    <p class="detail-value">${node.detail}</p>
+
+    <p class="detail-label">Dépend de</p>
+    <ul class="dep-list">${deps}</ul>
+
+    <p class="detail-label">Bloque</p>
+    <ul class="dep-list">${dependants}</ul>
+
+    <p class="detail-label">Parallélisable avec</p>
+    <ul class="dep-list">${parallel}</ul>
+  `;
+
+  document.getElementById('sidebar').classList.add('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  selectedNode = null;
+  render();
+}
+
+function showTooltip(e, node) {
+  tooltip.textContent = `${node.id} — ${node.label} (${node.size})`;
+  tooltip.style.left = (e.clientX + 12) + 'px';
+  tooltip.style.top = (e.clientY - 30) + 'px';
+  tooltip.classList.add('visible');
+}
+
+function hideTooltip() {
+  tooltip.classList.remove('visible');
+}
+
+function highlightSession(session) {
+  activeSession = session;
+  document.querySelectorAll('.session-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.session) === session);
+  });
+  render();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Set viewBox
+svg.setAttribute('viewBox', '0 0 890 830');
+render();
+
+// Click outside to deselect
+svg.addEventListener('click', (e) => {
+  if (!e.target.closest('.node-group')) {
+    closeSidebar();
+  }
+});
+</script>
+</body>
+</html>
