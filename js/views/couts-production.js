@@ -26,17 +26,17 @@ export async function render(container) {
     ${renderStepper(3)}
     ${renderStepObjective(3)}
     <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--accent); margin-bottom: 16px;">
-      Couts de production - ${expl.nom} - ${annee}
+      Coûts de production - ${expl.nom} - ${annee}
     </h2>
 
     <div class="card">
-      <div class="card-header">Detail par culture</div>
+      <div class="card-header">Détail par culture</div>
       <div class="table-container">
         <table>
           <thead>
             <tr>
               <th>Culture</th><th>Surface</th><th>Rdt (t/ha)</th>
-              <th>Ch. ope</th><th>Mecanisation</th><th>Structure</th><th>Rem. MO</th>
+              <th>Ch. opé</th><th>Mécanisation</th><th>Structure</th><th>Rém. MO</th>
               <th>Coproduits</th><th>CdP/ha</th><th>CdP/t</th>
               <th>Seuil</th><th>Prix vente</th><th>Marge/t</th>
             </tr>
@@ -75,7 +75,7 @@ export async function render(container) {
 
     <div class="grid-2 mt-4">
       <div class="card">
-        <div class="card-header">Decomposition du cout de production (EUR/ha)</div>
+        <div class="card-header">Décomposition du coût de production (EUR/ha)</div>
         <div class="chart-container">
           <canvas id="chart-cdp-stacked"></canvas>
         </div>
@@ -89,9 +89,9 @@ export async function render(container) {
     </div>
 
     <div class="card mt-4">
-      <div class="card-header">Marge de securite par culture</div>
+      <div class="card-header">Marge de sécurité par culture</div>
       <p style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 8px;">
-        Marge securite = (Prix vente - Seuil commercialisation) / Prix vente. Si &lt; 10%, la culture est a risque.
+        Marge sécurité = (Prix vente - Seuil commercialisation) / Prix vente. Si &lt; 10%, la culture est à risque.
       </p>
       <div style="display: flex; flex-wrap: wrap; gap: 8px;">
         ${cdp.map(c => {
@@ -121,10 +121,10 @@ function renderStackedBar(cdp) {
     data: {
       labels,
       datasets: [
-        { label: 'Ch. operationnelles', data: cdp.map(c => c.charges_ope_ha), backgroundColor: COLORS.coral, borderRadius: 3, barPercentage: 0.7 },
-        { label: 'Mecanisation', data: cdp.map(c => c.mecanisation_ha), backgroundColor: COLORS.gold, borderRadius: 3, barPercentage: 0.7 },
+        { label: 'Ch. opérationnelles', data: cdp.map(c => c.charges_ope_ha), backgroundColor: COLORS.coral, borderRadius: 3, barPercentage: 0.7 },
+        { label: 'Mécanisation', data: cdp.map(c => c.mecanisation_ha), backgroundColor: COLORS.gold, borderRadius: 3, barPercentage: 0.7 },
         { label: 'Structure', data: cdp.map(c => c.structure_ha + c.amort_bat_ha), backgroundColor: COLORS.steel, borderRadius: 3, barPercentage: 0.7 },
-        { label: 'Remuneration MO', data: cdp.map(c => c.remuneration_mo_ha), backgroundColor: COLORS.plum, borderRadius: 3, barPercentage: 0.7 }
+        { label: 'Rémunération MO', data: cdp.map(c => c.remuneration_mo_ha), backgroundColor: COLORS.plum, borderRadius: 3, barPercentage: 0.7 }
       ]
     },
     options: {
@@ -162,7 +162,7 @@ function renderCdPvsPrix(cdp) {
 }
 
 function fmtCulture(key) {
-  const n = { ble_tendre:'Ble tendre', ble_dur:'Ble dur', orge_hiver:'Orge hiver', orge_printemps:'Orge print.', colza:'Colza', mais_grain:'Mais', mais_grain_irrigue:'Mais irr.', tournesol:'Tournesol', pois:'Pois', feverole:'Feverole', betterave_sucriere:'Betterave', pomme_terre:'Pdt', lin_fibre:'Lin', soja:'Soja', soja_irrigue:'Soja irr.', sorgho:'Sorgho', triticale:'Triticale', lentille_puy:'Lentille', haricots_verts:'H. verts', petits_pois:'P. pois', prairie_foin:'Prairie' };
+  const n = { ble_tendre:'Blé tendre', ble_dur:'Blé dur', orge_hiver:'Orge hiver', orge_printemps:'Orge print.', colza:'Colza', mais_grain:'Maïs', mais_grain_irrigue:'Maïs irr.', tournesol:'Tournesol', pois:'Pois', feverole:'Féverole', betterave_sucriere:'Betterave', pomme_terre:'Pdt', lin_fibre:'Lin', soja:'Soja', soja_irrigue:'Soja irr.', sorgho:'Sorgho', triticale:'Triticale', lentille_puy:'Lentille', haricots_verts:'H. verts', petits_pois:'P. pois', prairie_foin:'Prairie' };
   return n[key] || key;
 }
 function fmt(n) { return n != null ? Math.round(n).toLocaleString('fr-FR') + ' EUR' : '-'; }

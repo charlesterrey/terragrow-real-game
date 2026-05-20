@@ -4,23 +4,23 @@ import { calculerSituationComplete, simulerScenario } from '../engine/simulation
 import { getProgression, getProgressionGlobale, getScenariosCustom } from '../state.js';
 
 const STEPS = [
-  { num: 1, label: 'Decouverte', hash: 'decouverte' },
+  { num: 1, label: 'Découverte', hash: 'decouverte' },
   { num: 2, label: 'Tableau de bord', hash: 'dashboard' },
-  { num: 3, label: 'Couts production', hash: 'couts-production' },
-  { num: 4, label: 'Tresorerie', hash: 'tresorerie' },
+  { num: 3, label: 'Coûts production', hash: 'couts-production' },
+  { num: 4, label: 'Trésorerie', hash: 'tresorerie' },
   { num: 5, label: 'Simulateur', hash: 'simulateur' },
   { num: 6, label: 'Conseil', hash: 'conseil' }
 ];
 
 function getProgressionBadge(prog) {
   if (prog.complete) {
-    return `<span class="pf-badge pf-prog-done">Termine</span>`;
+    return `<span class="pf-badge pf-prog-done">Terminé</span>`;
   }
   if (prog.etape > 0) {
     const step = STEPS[prog.etape - 1] || STEPS[0];
-    return `<span class="pf-badge pf-prog-encours">Etape ${prog.etape}/6</span>`;
+    return `<span class="pf-badge pf-prog-encours">Étape ${prog.etape}/6</span>`;
   }
-  return `<span class="pf-badge pf-prog-new">Non commence</span>`;
+  return `<span class="pf-badge pf-prog-new">Non commencé</span>`;
 }
 
 function getProgressionTarget(prog) {
@@ -95,13 +95,13 @@ export async function render(container) {
     <div style="margin-bottom: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         <h1 style="font-size: 20px; font-weight: 800; color: var(--gray-900);">Votre portefeuille</h1>
-        <span style="font-size: 13px; color: var(--gray-500);">${progGlobale.complete}/10 exploitations traitees</span>
+        <span style="font-size: 13px; color: var(--gray-500);">${progGlobale.complete}/10 exploitations traitées</span>
       </div>
       <div class="pf-progress-bar"><div class="pf-progress-bar-fill" style="width: ${progPct}%;"></div></div>
       <div style="display: flex; gap: 16px; margin-top: 6px; font-size: 12px; color: var(--gray-400);">
-        <span>${progGlobale.complete} terminees</span>
+        <span>${progGlobale.complete} terminées</span>
         <span>${progGlobale.enCours} en cours</span>
-        <span>${progGlobale.nonCommence} non commencees</span>
+        <span>${progGlobale.nonCommence} non commencées</span>
       </div>
     </div>
 
@@ -110,11 +110,11 @@ export async function render(container) {
         <p style="font-size: 13px; color: var(--gray-500);">10 exploitations &middot; ${annee} (${ref.annees[annee]?.label || ''})</p>
       </div>
       <div style="display: flex; align-items: center; gap: 10px;">
-        <label style="font-size: 12px; font-weight: 500; color: var(--gray-500);">Scenario :</label>
+        <label style="font-size: 12px; font-weight: 500; color: var(--gray-500);">Scénario :</label>
         <select class="scenario-select" id="portfolio-scenario">
-          <option value="">Aucun (situation reelle)</option>
+          <option value="">Aucun (situation réelle)</option>
           ${scenarios.map(s => `<option value="${s.id}">${s.nom}</option>`).join('')}
-          ${getScenariosCustom().length > 0 ? `<optgroup label="Mes scenarios">
+          ${getScenariosCustom().length > 0 ? `<optgroup label="Mes scénarios">
             ${getScenariosCustom().map(s => `<option value="custom_${s.id}">${s.nom}</option>`).join('')}
           </optgroup>` : ''}
         </select>
@@ -142,8 +142,8 @@ export async function render(container) {
             <th class="pf-th pf-th-right">EBE</th>
             <th class="pf-th pf-th-right">RCAI</th>
             <th class="pf-th pf-th-right">Ann./EBE</th>
-            <th class="pf-th pf-th-right">Resilience</th>
-            <th class="pf-th" id="th-delta" style="display:none;">Impact scenario</th>
+            <th class="pf-th pf-th-right">Résilience</th>
+            <th class="pf-th" id="th-delta" style="display:none;">Impact scénario</th>
           </tr>
         </thead>
         <tbody id="pf-tbody">
@@ -179,7 +179,7 @@ export async function render(container) {
         scenario = {
           id: cs.id,
           nom: cs.nom,
-          description: cs.description || 'Scenario personnalise',
+          description: cs.description || 'Scénario personnalisé',
           categorie: cs.categorie || 'custom',
           multiplicateurs: {
             prix_engrais_n: cs.multiplicateurs?.prix_engrais_n ?? 1,
@@ -312,7 +312,7 @@ function renderRowWithScenario(e, sim) {
             <div style="font-size: 12px; font-weight: 600; color: ${verdict.couleur};">${verdict.texte}</div>
             <div style="font-size: 11px; color: var(--gray-400); margin-top: 1px;">
               EBE <span class="${deltaEbe >= 0 ? 'delta-pos' : 'delta-neg'}">${deltaEbe >= 0 ? '+' : ''}${fmtK(deltaEbe)}</span>
-              &middot; Resil. <span class="${deltaResil >= 0 ? 'delta-pos' : 'delta-neg'}">${deltaResil >= 0 ? '+' : ''}${deltaResil}</span>
+              &middot; Résil. <span class="${deltaResil >= 0 ? 'delta-pos' : 'delta-neg'}">${deltaResil >= 0 ? '+' : ''}${deltaResil}</span>
             </div>
           </div>
         </div>
@@ -349,14 +349,14 @@ function renderScenariosSection() {
   if (custom.length === 0) {
     return `
       <div style="margin-top: 32px;">
-        <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px;">Mes scenarios</h2>
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px;">Mes scénarios</h2>
         <a href="#scenarios" style="display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--gray-50);border:2px dashed var(--gray-200);border-radius:12px;text-decoration:none;transition:all 0.15s;cursor:pointer;" onmouseover="this.style.borderColor='var(--accent-300)';this.style.background='var(--accent-50)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.background='var(--gray-50)'">
           <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-100);display:flex;align-items:center;justify-content:center;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-400)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
           <div>
-            <div style="font-size:14px;font-weight:600;color:var(--gray-700);">Creer votre premier scenario &rarr;</div>
-            <div style="font-size:12px;color:var(--gray-400);">Personnalisez vos propres parametres de crise</div>
+            <div style="font-size:14px;font-weight:600;color:var(--gray-700);">Créer votre premier scénario &rarr;</div>
+            <div style="font-size:12px;color:var(--gray-400);">Personnalisez vos propres paramètres de crise</div>
           </div>
         </a>
       </div>
@@ -366,7 +366,7 @@ function renderScenariosSection() {
   return `
     <div style="margin-top: 32px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800);">Mes scenarios personnalises</h2>
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800);">Mes scénarios personnalisés</h2>
         <a href="#scenarios" style="font-size:12px;color:var(--accent-400);text-decoration:none;font-weight:600;">Voir tout &rarr;</a>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">

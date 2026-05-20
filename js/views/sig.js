@@ -51,16 +51,16 @@ export async function render(container) {
         <div class="table-container">
           <table>
             <tbody>
-              ${sigRow('Ventes de recolte', sig.ventes, '')}
+              ${sigRow('Ventes de récolte', sig.ventes, '')}
               ${sigRow('Aides PAC et subventions', sig.aides, '')}
               ${sigRow('Autres produits', sig.autresProduits, '')}
               ${sigRow('PRODUIT BRUT', sig.produitBrut, 'bold primary-bg')}
-              ${sigRow('Charges operationnelles', -sig.chargesOpe, 'danger')}
+              ${sigRow('Charges opérationnelles', -sig.chargesOpe, 'danger')}
               ${sigRow('MARGE BRUTE', sig.margeBrute, 'bold success-bg')}
               ${sigRow('Charges de structure', -sig.chargesStructure, 'danger')}
               ${sigRow('EBE', sig.ebe, 'bold ' + (sig.ebe >= 0 ? 'success-bg' : 'danger-bg'))}
               ${sigRow('Amortissements', -sig.amortissements, '')}
-              ${sigRow('Resultat d\'exploitation', sig.resultatExploitation, 'bold')}
+              ${sigRow('Résultat d\'exploitation', sig.resultatExploitation, 'bold')}
               ${sigRow('Frais financiers', -sig.fraisFinanciers, '')}
               ${sigRow('RCAI', sig.rcai, 'bold ' + (sig.rcai >= 0 ? 'success-bg' : 'danger-bg'))}
             </tbody>
@@ -68,7 +68,7 @@ export async function render(container) {
         </div>
       </div>
       <div class="card">
-        <div class="card-header">Formation du resultat (waterfall)</div>
+        <div class="card-header">Formation du résultat (waterfall)</div>
         <div class="chart-container">
           <canvas id="chart-waterfall"></canvas>
         </div>
@@ -83,7 +83,7 @@ export async function render(container) {
             <thead><tr><th>Indicateur</th><th>N-2</th><th>N-1</th><th>N</th></tr></thead>
             <tbody>
               ${comp3Row('Produit brut', sigParAnnee, 'produitBrut')}
-              ${comp3Row('Charges ope', sigParAnnee, 'chargesOpe')}
+              ${comp3Row('Charges opé', sigParAnnee, 'chargesOpe')}
               ${comp3Row('Marge brute', sigParAnnee, 'margeBrute')}
               ${comp3Row('EBE', sigParAnnee, 'ebe')}
               ${comp3Row('RCAI', sigParAnnee, 'rcai')}
@@ -97,7 +97,7 @@ export async function render(container) {
     </div>
 
     <div class="card mt-4">
-      <div class="card-header">Ratios cles</div>
+      <div class="card-header">Ratios clés</div>
       <div class="kpi-grid">
         ${ratioKPI('EBE/Produit brut', sig.produitBrut > 0 ? Math.round(sig.ebe / sig.produitBrut * 100) + '%' : '-', sig.produitBrut > 0 && sig.ebe / sig.produitBrut > 0.3 ? 'ok' : 'attention', 'Objectif > 30%')}
         ${ratioKPI('Annuites/EBE', sig.ebe > 0 ? Math.round((expl.annuites_total || 0) / sig.ebe * 100) + '%' : 'N/A', sig.ebe > 0 && (expl.annuites_total || 0) / sig.ebe < 0.5 ? 'ok' : 'critique', 'Alerte si > 50%')}
@@ -115,7 +115,7 @@ function renderWaterfall(sig) {
   const ctx = document.getElementById('chart-waterfall');
   if (!ctx) return;
 
-  const labels = ['Produit brut', 'Ch. ope', 'Marge brute', 'Ch. struct.', 'EBE', 'Amort.', 'Fr. fin.', 'RCAI'];
+  const labels = ['Produit brut', 'Ch. opé', 'Marge brute', 'Ch. struct.', 'EBE', 'Amort.', 'Fr. fin.', 'RCAI'];
   const values = [sig.produitBrut, -sig.chargesOpe, sig.margeBrute, -sig.chargesStructure, sig.ebe, -sig.amortissements, -sig.fraisFinanciers, sig.rcai];
   const colors = values.map(v => v >= 0 ? COLORS.positive : COLORS.negative);
 

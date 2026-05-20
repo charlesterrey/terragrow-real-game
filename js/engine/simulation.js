@@ -79,7 +79,7 @@ function calcDelta(av, ap, expl) {
 function getVerdict(r) {
   const t = r.indicTreso.tresorerieMin||0, rc = r.sig.rcai;
   if (t < -50000 || (rc < -30000 && r.ratios.alerteAnnuites === 'critique')) return { texte: "Cessation de paiement", couleur: "#EF4444", icone: "alert" };
-  if (t < 0 || rc < 0) return { texte: "Tresorerie critique", couleur: "#F59E0B", icone: "warning" };
+  if (t < 0 || rc < 0) return { texte: "Trésorerie critique", couleur: "#F59E0B", icone: "warning" };
   return { texte: "L'exploitation survit", couleur: "#22C55E", icone: "check" };
 }
 

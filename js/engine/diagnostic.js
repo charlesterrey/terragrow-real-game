@@ -116,38 +116,38 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
   // ─── 3. Construction des ratios avec interpretation ───
   const ratios = {
     annuitesEbe: buildRatio(ratioAnnEbe, SEUILS.annuitesEbe, '%',
-      ratioAnnEbe > 80 ? 'Capacite de remboursement critique — risque de cessation' :
-      ratioAnnEbe > 50 ? 'Capacite de remboursement tendue — peu de marge de manoeuvre' :
-      'Capacite de remboursement correcte', true),
+      ratioAnnEbe > 80 ? 'Capacité de remboursement critique — risque de cessation' :
+      ratioAnnEbe > 50 ? 'Capacité de remboursement tendue — peu de marge de manœuvre' :
+      'Capacité de remboursement correcte', true),
     ebeHa: buildRatio(ebeHa, SEUILS.ebeHa, 'EUR/ha',
-      ebeHa < 100 ? 'EBE tres faible — l\'exploitation ne degage pas assez de revenu' :
-      ebeHa < 250 ? 'EBE modeste — revenu limite apres charges' :
+      ebeHa < 100 ? 'EBE très faible — l\'exploitation ne dégage pas assez de revenu' :
+      ebeHa < 250 ? 'EBE modeste — revenu limité après charges' :
       'EBE satisfaisant'),
     tresorerieHa: buildRatio(tresoHa, SEUILS.tresorerieHa, 'EUR/ha',
-      tresoHa < -100 ? 'Tresorerie structurellement negative — besoin de financement CT important' :
-      tresoHa < 0 ? 'Tresorerie negative — besoin de financement court terme' :
-      'Tresorerie positive'),
+      tresoHa < -100 ? 'Trésorerie structurellement négative — besoin de financement CT important' :
+      tresoHa < 0 ? 'Trésorerie négative — besoin de financement court terme' :
+      'Trésorerie positive'),
     chargesStructureHa: buildRatio(csHa, SEUILS.chargesStructureHa, 'EUR/ha',
-      csHa > 1100 ? 'Charges de structure tres elevees — sur-investissement probable' :
-      csHa > 800 ? 'Charges de structure elevees par rapport a la SAU' :
-      'Charges de structure maitrisees', true),
+      csHa > 1100 ? 'Charges de structure très élevées — sur-investissement probable' :
+      csHa > 800 ? 'Charges de structure élevées par rapport à la SAU' :
+      'Charges de structure maîtrisées', true),
     margeSecurite: buildRatio(margeSecurite, SEUILS.margeSecurite, '%',
-      margeSecurite < 5 ? 'Marge quasi nulle — la moindre baisse de prix met en peril' :
-      margeSecurite < 15 ? 'Marge faible entre cout de production et prix de vente' :
-      'Marge de securite confortable'),
+      margeSecurite < 5 ? 'Marge quasi nulle — la moindre baisse de prix met en péril' :
+      margeSecurite < 15 ? 'Marge faible entre coût de production et prix de vente' :
+      'Marge de sécurité confortable'),
     tauxEndettement: buildRatio(tauxEndettement, SEUILS.tauxEndettement, '%',
-      tauxEndettement > 60 ? 'Endettement excessif — structure financiere fragile' :
-      tauxEndettement > 40 ? 'Endettement significatif — vigilance sur la capacite d\'investissement' :
-      'Endettement maitrise', true),
+      tauxEndettement > 60 ? 'Endettement excessif — structure financière fragile' :
+      tauxEndettement > 40 ? 'Endettement significatif — vigilance sur la capacité d\'investissement' :
+      'Endettement maîtrisé', true),
     diversification: buildRatio(shannon, SEUILS.diversification, '',
-      shannon < 0.5 ? 'Assolement trop concentre — forte dependance a 1-2 cultures' :
-      shannon < 0.8 ? 'Diversification insuffisante — elargir l\'assolement' :
+      shannon < 0.5 ? 'Assolement trop concentré — forte dépendance à 1-2 cultures' :
+      shannon < 0.8 ? 'Diversification insuffisante — élargir l\'assolement' :
       shannon < 1.2 ? 'Diversification correcte' :
       'Bonne diversification de l\'assolement'),
     rcaiHa: buildRatio(rcaiHa, SEUILS.rcaiHa, 'EUR/ha',
       rcaiHa < -100 ? 'L\'exploitation perd de l\'argent — situation critique' :
-      rcaiHa < 0 ? 'Resultat negatif — l\'exploitation ne couvre pas toutes ses charges' :
-      'Resultat positif')
+      rcaiHa < 0 ? 'Résultat négatif — l\'exploitation ne couvre pas toutes ses charges' :
+      'Résultat positif')
   };
 
   // ─── 4. Identification des forces ───
@@ -162,30 +162,30 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
     if (ref && rdt > ref * 1.05) {
       forces.push({
         titre: 'Bon rendement ' + fmtC(c.culture),
-        detail: 'Le rendement ' + fmtC(c.culture) + ' (' + rdt + ' q/ha) est superieur a la moyenne regionale (' + ref + ' q/ha), soit +' + Math.round((rdt / ref - 1) * 100) + '%.'
+        detail: 'Le rendement ' + fmtC(c.culture) + ' (' + rdt + ' q/ha) est supérieur à la moyenne régionale (' + ref + ' q/ha), soit +' + Math.round((rdt / ref - 1) * 100) + '%.'
       });
     }
   }
 
   // Bonne diversification
   if (shannon >= 1.2) {
-    forces.push({ titre: 'Assolement diversifie', detail: 'L\'indice de Shannon (' + rd(shannon) + ') traduit une bonne repartition des cultures, ce qui reduit le risque.' });
+    forces.push({ titre: 'Assolement diversifié', detail: 'L\'indice de Shannon (' + rd(shannon) + ') traduit une bonne répartition des cultures, ce qui réduit le risque.' });
   }
 
   // Maitrise des charges ope
   const coHaMoy = resume.totalChargesOpe / sau;
   if (coHaMoy < 450) {
-    forces.push({ titre: 'Charges operationnelles maitrisees', detail: 'Les charges ope moyennes (' + Math.round(coHaMoy) + ' EUR/ha) sont contenues.' });
+    forces.push({ titre: 'Charges opérationnelles maîtrisées', detail: 'Les charges opé moyennes (' + Math.round(coHaMoy) + ' EUR/ha) sont contenues.' });
   }
 
   // Bonne marge de securite
   if (margeSecurite > 25) {
-    forces.push({ titre: 'Bonne marge de securite', detail: 'La marge moyenne entre CdP et prix de vente est de ' + Math.round(margeSecurite) + '%, offrant un tampon en cas de baisse des prix.' });
+    forces.push({ titre: 'Bonne marge de sécurité', detail: 'La marge moyenne entre CdP et prix de vente est de ' + Math.round(margeSecurite) + '%, offrant un tampon en cas de baisse des prix.' });
   }
 
   // Faible endettement
   if (tauxEndettement < 25) {
-    forces.push({ titre: 'Endettement maitrise', detail: 'Le taux d\'endettement (' + Math.round(tauxEndettement) + '%) est faible, laissant une capacite d\'investissement.' });
+    forces.push({ titre: 'Endettement maîtrisé', detail: 'Le taux d\'endettement (' + Math.round(tauxEndettement) + '%) est faible, laissant une capacité d\'investissement.' });
   }
 
   // EBE solide
@@ -197,44 +197,44 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
   if (exploitation.sau_propriete > 0) {
     const pctPropriete = Math.round(exploitation.sau_propriete / sau * 100);
     if (pctPropriete > 30) {
-      forces.push({ titre: 'Part fonciere en propriete', detail: pctPropriete + '% de la SAU en propriete (' + exploitation.sau_propriete + ' ha) — reduit la charge de fermage.' });
+      forces.push({ titre: 'Part foncière en propriété', detail: pctPropriete + '% de la SAU en propriété (' + exploitation.sau_propriete + ' ha) — réduit la charge de fermage.' });
     }
   }
 
   // Stockage
   if (exploitation.a_stockage) {
-    forces.push({ titre: 'Capacite de stockage', detail: 'La presence d\'un stockage permet de differer la vente et de capter de meilleurs prix.' });
+    forces.push({ titre: 'Capacité de stockage', detail: 'La présence d\'un stockage permet de différer la vente et de capter de meilleurs prix.' });
   }
 
   // ─── 5. Identification des faiblesses ───
   const faiblesses = [];
 
   if (ratioAnnEbe > 80) {
-    faiblesses.push({ titre: 'Surendettement critique', detail: 'Les annuites representent ' + Math.round(ratioAnnEbe) + '% de l\'EBE. Au-dela de 50%, la capacite d\'investissement est compromise. Au-dela de 80%, le risque de cessation de paiement est reel.', severite: 'haute' });
+    faiblesses.push({ titre: 'Surendettement critique', detail: 'Les annuités représentent ' + Math.round(ratioAnnEbe) + '% de l\'EBE. Au-delà de 50%, la capacité d\'investissement est compromise. Au-delà de 80%, le risque de cessation de paiement est réel.', severite: 'haute' });
   } else if (ratioAnnEbe > 50) {
-    faiblesses.push({ titre: 'Poids des annuites', detail: 'Les annuites representent ' + Math.round(ratioAnnEbe) + '% de l\'EBE. Il reste peu de marge pour investir ou absorber un choc.', severite: 'moyenne' });
+    faiblesses.push({ titre: 'Poids des annuités', detail: 'Les annuités représentent ' + Math.round(ratioAnnEbe) + '% de l\'EBE. Il reste peu de marge pour investir ou absorber un choc.', severite: 'moyenne' });
   }
 
   if (sig.rcai < 0) {
-    faiblesses.push({ titre: 'Resultat negatif', detail: 'Le RCAI est de ' + fmtM(sig.rcai) + '. L\'exploitation ne couvre pas l\'ensemble de ses charges, amortissements et frais financiers inclus.', severite: 'haute' });
+    faiblesses.push({ titre: 'Résultat négatif', detail: 'Le RCAI est de ' + fmtM(sig.rcai) + '. L\'exploitation ne couvre pas l\'ensemble de ses charges, amortissements et frais financiers inclus.', severite: 'haute' });
   }
 
   if (tresoHa < -50) {
-    faiblesses.push({ titre: 'Tresorerie structurellement negative', detail: 'La tresorerie minimale atteint ' + fmtM(indT.tresorerieMin) + ' soit ' + Math.round(tresoHa) + ' EUR/ha. Un financement court terme est indispensable.', severite: 'haute' });
+    faiblesses.push({ titre: 'Trésorerie structurellement négative', detail: 'La trésorerie minimale atteint ' + fmtM(indT.tresorerieMin) + ' soit ' + Math.round(tresoHa) + ' EUR/ha. Un financement court terme est indispensable.', severite: 'haute' });
   } else if (tresoHa < 0) {
-    faiblesses.push({ titre: 'Creux de tresorerie', detail: 'La tresorerie passe en negatif pendant ' + (indT.moisNegatifs || 0) + ' mois, avec un minimum de ' + fmtM(indT.tresorerieMin) + '.', severite: 'moyenne' });
+    faiblesses.push({ titre: 'Creux de trésorerie', detail: 'La trésorerie passe en négatif pendant ' + (indT.moisNegatifs || 0) + ' mois, avec un minimum de ' + fmtM(indT.tresorerieMin) + '.', severite: 'moyenne' });
   }
 
   if (csHa > 1000) {
-    faiblesses.push({ titre: 'Charges de structure elevees', detail: 'A ' + Math.round(csHa) + ' EUR/ha (hors amortissements), les charges de structure sont nettement au-dessus de la norme (600-800 EUR/ha). Verifier fermage, MSA, salaires.', severite: 'haute' });
+    faiblesses.push({ titre: 'Charges de structure élevées', detail: 'À ' + Math.round(csHa) + ' EUR/ha (hors amortissements), les charges de structure sont nettement au-dessus de la norme (600-800 EUR/ha). Vérifier fermage, MSA, salaires.', severite: 'haute' });
   } else if (csHa > 800) {
-    faiblesses.push({ titre: 'Charges de structure a surveiller', detail: 'A ' + Math.round(csHa) + ' EUR/ha, les charges fixes sont au-dessus de la moyenne. Potentiel d\'optimisation.', severite: 'moyenne' });
+    faiblesses.push({ titre: 'Charges de structure à surveiller', detail: 'À ' + Math.round(csHa) + ' EUR/ha, les charges fixes sont au-dessus de la moyenne. Potentiel d\'optimisation.', severite: 'moyenne' });
   }
 
   if (margeSecurite < 5) {
-    faiblesses.push({ titre: 'Marge de securite quasi nulle', detail: 'En moyenne, le prix de vente ne depasse le cout de production que de ' + Math.round(margeSecurite) + '%. Toute fluctuation de prix ou de rendement impacte directement le revenu.', severite: 'haute' });
+    faiblesses.push({ titre: 'Marge de sécurité quasi nulle', detail: 'En moyenne, le prix de vente ne dépasse le coût de production que de ' + Math.round(margeSecurite) + '%. Toute fluctuation de prix ou de rendement impacte directement le revenu.', severite: 'haute' });
   } else if (margeSecurite < 15) {
-    faiblesses.push({ titre: 'Marge de securite faible', detail: 'La marge moyenne CdP/prix est de ' + Math.round(margeSecurite) + '%. Vulnerable a une baisse des prix de marche.', severite: 'moyenne' });
+    faiblesses.push({ titre: 'Marge de sécurité faible', detail: 'La marge moyenne CdP/prix est de ' + Math.round(margeSecurite) + '%. Vulnérable à une baisse des prix de marché.', severite: 'moyenne' });
   }
 
   // Rendements sous la moyenne regionale
@@ -242,26 +242,26 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
     const ref = rdtRef[c.culture];
     const rdt = c.rendement_realise || c.rendement_vise || 0;
     if (ref && rdt < ref * 0.85) {
-      faiblesses.push({ titre: 'Rendement ' + fmtC(c.culture) + ' faible', detail: fmtC(c.culture) + ' a ' + rdt + ' q/ha contre ' + ref + ' q/ha en moyenne regionale (-' + Math.round((1 - rdt / ref) * 100) + '%). Verifier les ITK.', severite: 'moyenne' });
+      faiblesses.push({ titre: 'Rendement ' + fmtC(c.culture) + ' faible', detail: fmtC(c.culture) + ' à ' + rdt + ' q/ha contre ' + ref + ' q/ha en moyenne régionale (-' + Math.round((1 - rdt / ref) * 100) + '%). Vérifier les ITK.', severite: 'moyenne' });
     }
   }
 
   // Cultures a marge negative
   for (const c of cdp) {
     if (c.marge_tonne < 0) {
-      faiblesses.push({ titre: fmtC(c.culture) + ' deficitaire', detail: 'Le CdP (' + Math.round(c.cdp_tonne) + ' EUR/t) depasse le prix de vente (' + Math.round(c.prix_vente) + ' EUR/t). Perte de ' + Math.round(Math.abs(c.marge_tonne)) + ' EUR/t, soit ' + fmtM(Math.abs(c.marge_tonne * c.rendement_t_ha * c.surface)) + ' sur ' + c.surface + ' ha.', severite: 'haute' });
+      faiblesses.push({ titre: fmtC(c.culture) + ' déficitaire', detail: 'Le CdP (' + Math.round(c.cdp_tonne) + ' EUR/t) dépasse le prix de vente (' + Math.round(c.prix_vente) + ' EUR/t). Perte de ' + Math.round(Math.abs(c.marge_tonne)) + ' EUR/t, soit ' + fmtM(Math.abs(c.marge_tonne * c.rendement_t_ha * c.surface)) + ' sur ' + c.surface + ' ha.', severite: 'haute' });
     }
   }
 
   // Dependance au fermage
   const pctFermage = Math.round(exploitation.sau_fermage / sau * 100);
   if (pctFermage > 80) {
-    faiblesses.push({ titre: 'Forte dependance au fermage', detail: pctFermage + '% de la SAU est en fermage. Le fermage represente ' + fmtM(exploitation.charges_structure?.fermage || 0) + '/an, limitant la flexibilite.', severite: 'faible' });
+    faiblesses.push({ titre: 'Forte dépendance au fermage', detail: pctFermage + '% de la SAU est en fermage. Le fermage représente ' + fmtM(exploitation.charges_structure?.fermage || 0) + '/an, limitant la flexibilité.', severite: 'faible' });
   }
 
   // Shannon faible
   if (shannon < 0.8) {
-    faiblesses.push({ titre: 'Assolement peu diversifie', detail: 'Indice de Shannon = ' + rd(shannon) + '. Quelques cultures dominent, ce qui concentre le risque.', severite: 'moyenne' });
+    faiblesses.push({ titre: 'Assolement peu diversifié', detail: 'Indice de Shannon = ' + rd(shannon) + '. Quelques cultures dominent, ce qui concentre le risque.', severite: 'moyenne' });
   }
 
   // ─── 6. Analyse des risques ───
@@ -275,10 +275,10 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
       const cdpBle = cdp.find(c => c.culture === 'ble_tendre');
       const perte20 = cdpBle ? Math.round(cdpBle.prix_vente * 0.20 * cdpBle.rendement_t_ha * bleCulture.surface) : 0;
       risques.push({
-        titre: 'Dependance au ble tendre',
-        detail: 'Le ble represente ' + pctBle + '% de la SAU. Une baisse de 20% du prix entrainerait une perte de ' + fmtM(perte20) + '.',
+        titre: 'Dépendance au blé tendre',
+        detail: 'Le blé représente ' + pctBle + '% de la SAU. Une baisse de 20% du prix entraînerait une perte de ' + fmtM(perte20) + '.',
         probabilite: 'moyenne',
-        impact: pctBle > 40 ? 'eleve' : 'moyen'
+        impact: pctBle > 40 ? 'élevé' : 'moyen'
       });
     }
   }
@@ -289,10 +289,10 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
     return s + pertePB;
   }, 0);
   risques.push({
-    titre: 'Risque climatique (secheresse -15% rendement)',
-    detail: 'Une baisse generalisee de 15% des rendements entrainerait une perte de chiffre d\'affaires de ' + fmtM(perteRdt15) + ', soit ' + Math.round(perteRdt15 / sig.ebe * 100) + '% de l\'EBE.',
+    titre: 'Risque climatique (sécheresse -15% rendement)',
+    detail: 'Une baisse généralisée de 15% des rendements entraînerait une perte de chiffre d\'affaires de ' + fmtM(perteRdt15) + ', soit ' + Math.round(perteRdt15 / sig.ebe * 100) + '% de l\'EBE.',
     probabilite: 'moyenne',
-    impact: perteRdt15 > sig.ebe * 0.5 ? 'eleve' : 'moyen'
+    impact: perteRdt15 > sig.ebe * 0.5 ? 'élevé' : 'moyen'
   });
 
   // Risque prix intrants (+30% engrais)
@@ -302,9 +302,9 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
   }, 0);
   risques.push({
     titre: 'Risque hausse intrants (+30% engrais)',
-    detail: 'Une hausse de 30% du prix des engrais augmenterait les charges de ' + fmtM(surchargeEngrais) + ', reduisant d\'autant l\'EBE.',
+    detail: 'Une hausse de 30% du prix des engrais augmenterait les charges de ' + fmtM(surchargeEngrais) + ', réduisant d\'autant l\'EBE.',
     probabilite: 'moyenne',
-    impact: surchargeEngrais > sig.ebe * 0.3 ? 'eleve' : 'moyen'
+    impact: surchargeEngrais > sig.ebe * 0.3 ? 'élevé' : 'moyen'
   });
 
   // Risque echeances proches d'emprunt
@@ -313,8 +313,8 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
   if (empruntsProches.length > 0) {
     const totalAnnu = empruntsProches.reduce((s, e) => s + e.annuite, 0);
     risques.push({
-      titre: 'Echeances d\'emprunt proches',
-      detail: empruntsProches.length + ' emprunt(s) arrivent a echeance d\'ici 2 ans. Cela liberera ' + fmtM(totalAnnu) + '/an d\'annuites, mais attention au renouvellement eventuel de materiel.',
+      titre: 'Échéances d\'emprunt proches',
+      detail: empruntsProches.length + ' emprunt(s) arrivent à échéance d\'ici 2 ans. Cela libérera ' + fmtM(totalAnnu) + '/an d\'annuités, mais attention au renouvellement éventuel de matériel.',
       probabilite: 'certaine',
       impact: 'moyen'
     });
@@ -323,10 +323,10 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
   // Risque si pas de MRC
   if (!exploitation.charges_structure?.mrc || exploitation.charges_structure.mrc < 2000) {
     risques.push({
-      titre: 'Absence d\'assurance recolte',
-      detail: 'L\'exploitation ne semble pas ou peu couverte en assurance multirisque climatique. En cas d\'alea majeur, la perte est integralement supportee.',
+      titre: 'Absence d\'assurance récolte',
+      detail: 'L\'exploitation ne semble pas ou peu couverte en assurance multirisque climatique. En cas d\'aléa majeur, la perte est intégralement supportée.',
       probabilite: 'faible',
-      impact: 'eleve'
+      impact: 'élevé'
     });
   }
 
@@ -338,8 +338,8 @@ export function genererDiagnostic(exploitation, annee, referentiel, itk, situati
     besoinMaximal: moisCrit ? Math.round(moisCrit.tresorerie_cumulee) : 0,
     dureeNegative: moisNegatifs.length,
     commentaire: moisNegatifs.length === 0
-      ? 'La tresorerie reste positive sur l\'ensemble de l\'exercice.'
-      : 'La tresorerie est negative pendant ' + moisNegatifs.length + ' mois (' + moisNegatifs.map(m => m.label).join(', ') + '). Le pic de besoin atteint ' + fmtM(Math.abs(moisCrit.tresorerie_cumulee)) + ' en ' + moisCrit.label + '.'
+      ? 'La trésorerie reste positive sur l\'ensemble de l\'exercice.'
+      : 'La trésorerie est négative pendant ' + moisNegatifs.length + ' mois (' + moisNegatifs.map(m => m.label).join(', ') + '). Le pic de besoin atteint ' + fmtM(Math.abs(moisCrit.tresorerie_cumulee)) + ' en ' + moisCrit.label + '.'
   };
 
   // ─── 8. Analyse de sensibilite ───
@@ -443,21 +443,21 @@ function calculerSensibilite(exploitation, annee, referentiel, itk, cdpBase, sig
 
   return {
     prixBle20: {
-      label: 'Prix ble tendre -20%',
+      label: 'Prix blé tendre -20%',
       perteCA: Math.round(pertePrixBle),
       ebeApres: Math.round(ebeApresPrixBle),
       ebeVariation: Math.round(pertePrixBle),
-      verdict: ebeApresPrixBle > 0 ? 'L\'exploitation absorbe le choc' : 'EBE negatif — situation critique'
+      verdict: ebeApresPrixBle > 0 ? 'L\'exploitation absorbe le choc' : 'EBE négatif — situation critique'
     },
     rendements15: {
       label: 'Rendements -15% (toutes cultures)',
       perteCA: Math.round(perteRendement),
       ebeApres: Math.round(ebeApresRendement),
       ebeVariation: Math.round(perteRendement),
-      verdict: ebeApresRendement > 0 ? 'L\'exploitation resiste' : 'EBE negatif — impossible de couvrir les charges'
+      verdict: ebeApresRendement > 0 ? 'L\'exploitation résiste' : 'EBE négatif — impossible de couvrir les charges'
     },
     combine: {
-      label: 'Prix ble -20% ET rendements -15%',
+      label: 'Prix blé -20% ET rendements -15%',
       perteCA: Math.round(pertePrixBle + perteRendement),
       ebeApres: Math.round(ebeApresCombine),
       ebeVariation: Math.round(sigBase.ebe - ebeApresCombine),
@@ -508,5 +508,5 @@ function severiteOrdre(s) { return { haute: 3, moyenne: 2, faible: 1 }[s] || 0; 
 function rd(n) { return Math.round(n * 100) / 100; }
 function fmtM(n) { return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n || 0); }
 function fmtC(k) {
-  return { ble_tendre: 'Ble tendre', ble_dur: 'Ble dur', orge_hiver: 'Orge hiver', orge_printemps: 'Orge printemps', colza: 'Colza', mais_grain: 'Mais grain', mais_grain_irrigue: 'Mais irrigue', tournesol: 'Tournesol', pois: 'Pois', feverole: 'Feverole', betterave_sucriere: 'Betterave', pomme_terre: 'Pomme de terre', lin_fibre: 'Lin fibre', soja: 'Soja', soja_irrigue: 'Soja irrigue', sorgho: 'Sorgho', triticale: 'Triticale', lentille_puy: 'Lentille du Puy', haricots_verts: 'Haricots verts', petits_pois: 'Petits pois', prairie_foin: 'Prairie foin' }[k] || k;
+  return { ble_tendre: 'Blé tendre', ble_dur: 'Blé dur', orge_hiver: 'Orge hiver', orge_printemps: 'Orge printemps', colza: 'Colza', mais_grain: 'Maïs grain', mais_grain_irrigue: 'Maïs irrigué', tournesol: 'Tournesol', pois: 'Pois', feverole: 'Féverole', betterave_sucriere: 'Betterave', pomme_terre: 'Pomme de terre', lin_fibre: 'Lin fibre', soja: 'Soja', soja_irrigue: 'Soja irrigué', sorgho: 'Sorgho', triticale: 'Triticale', lentille_puy: 'Lentille du Puy', haricots_verts: 'Haricots verts', petits_pois: 'Petits pois', prairie_foin: 'Prairie foin' }[k] || k;
 }

@@ -131,7 +131,7 @@ async function navigateTo(hash) {
   try {
     const loader = ROUTES[route];
     if (!loader) {
-      container.innerHTML = '<p>Vue non trouvee</p>';
+      container.innerHTML = '<p>Vue non trouvée</p>';
       return;
     }
     const mod = await loader();
@@ -162,7 +162,7 @@ function updateSidebar() {
         ${students ? `<div style="font-size:11px;color:var(--gray-500);margin-top:1px;">${students}</div>` : ''}
       `;
     } else {
-      teamDisplay.innerHTML = `<div style="font-size:12px;color:var(--gray-400);cursor:pointer;" onclick="showOnboarding()">Configurer l'equipe...</div>`;
+      teamDisplay.innerHTML = `<div style="font-size:12px;color:var(--gray-400);cursor:pointer;" onclick="showOnboarding()">Configurer l'équipe...</div>`;
     }
   }
 
@@ -208,7 +208,7 @@ function updateSidebar() {
     const expl = cache.exploitations[state.exploitationId];
     banner.innerHTML = `
       <div class="session-banner">
-        <span>Session restauree - ${expl?.nom || state.exploitationId} - ${date}</span>
+        <span>Session restaurée - ${expl?.nom || state.exploitationId} - ${date}</span>
         <button onclick="resetApp()">X</button>
       </div>`;
   } else {
@@ -243,7 +243,7 @@ window.setAnnee = function(annee) {
 };
 
 window.resetApp = function() {
-  if (confirm('Reinitialiser toute la session ? Toutes les donnees seront perdues.')) {
+  if (confirm('Réinitialiser toute la session ? Toutes les données seront perdues.')) {
     reinitialiserEtat();
     updateSidebar();
     window.location.hash = '#accueil';
@@ -273,20 +273,20 @@ function showOnboardingModal() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-500)" stroke-width="1.5"><path d="M3 21h18M12 3v18M5 14l7-7 7 7"/></svg>
           </div>
           <h2 style="font-size:20px;font-weight:800;color:var(--gray-900);margin-bottom:4px;">Bienvenue dans TerraGrow</h2>
-          <p style="font-size:13px;color:var(--gray-500);">Identifiez votre equipe pour commencer</p>
+          <p style="font-size:13px;color:var(--gray-500);">Identifiez votre équipe pour commencer</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;">
           <div>
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:4px;">Nom d'equipe *</label>
-            <input type="text" id="onb-equipe" placeholder="Ex: Equipe Alpha" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent-500)'" onblur="this.style.borderColor='var(--gray-200)'" />
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:4px;">Nom d'équipe *</label>
+            <input type="text" id="onb-equipe" placeholder="Ex: Équipe Alpha" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent-500)'" onblur="this.style.borderColor='var(--gray-200)'" />
           </div>
           <div>
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:4px;">Etudiant 1 *</label>
-            <input type="text" id="onb-etudiant1" placeholder="Prenom Nom" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent-500)'" onblur="this.style.borderColor='var(--gray-200)'" />
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:4px;">Étudiant 1 *</label>
+            <input type="text" id="onb-etudiant1" placeholder="Prénom Nom" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent-500)'" onblur="this.style.borderColor='var(--gray-200)'" />
           </div>
           <div>
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:4px;">Etudiant 2 <span style="color:var(--gray-400);font-weight:400;">(optionnel)</span></label>
-            <input type="text" id="onb-etudiant2" placeholder="Prenom Nom" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent-500)'" onblur="this.style.borderColor='var(--gray-200)'" />
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:4px;">Étudiant 2 <span style="color:var(--gray-400);font-weight:400;">(optionnel)</span></label>
+            <input type="text" id="onb-etudiant2" placeholder="Prénom Nom" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent-500)'" onblur="this.style.borderColor='var(--gray-200)'" />
           </div>
           <div id="onb-error" style="font-size:12px;color:var(--red-500);display:none;"></div>
           <button id="onb-submit" style="margin-top:8px;width:100%;padding:12px;background:var(--accent-500);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='var(--accent-600)'" onmouseout="this.style.background='var(--accent-500)'">Commencer</button>
@@ -308,7 +308,7 @@ function showOnboardingModal() {
     const errorEl = document.getElementById('onb-error');
 
     if (!equipe || !etudiant1) {
-      errorEl.textContent = 'Veuillez renseigner le nom d\'equipe et le nom de l\'etudiant 1.';
+      errorEl.textContent = 'Veuillez renseigner le nom d\'équipe et le nom de l\'étudiant 1.';
       errorEl.style.display = 'block';
       return;
     }

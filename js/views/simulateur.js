@@ -25,19 +25,19 @@ export async function render(container) {
     ${renderStepper(5)}
     ${renderStepObjective(5)}
     <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--accent); margin-bottom: 16px;">
-      Simulateur de scenarios - ${expl.nom}
+      Simulateur de scénarios - ${expl.nom}
     </h2>
 
     <div class="card">
-      <div class="card-header">Selection du scenario</div>
+      <div class="card-header">Sélection du scénario</div>
       <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
         <select id="scenario-select" style="flex: 1; min-width: 240px;">
-          <option value="">-- Choisir un scenario --</option>
+          <option value="">-- Choisir un scénario --</option>
           ${scenarios.map(s => `<option value="${s.id}" ${state.scenarioActif === s.id ? 'selected' : ''}>${s.nom}</option>`).join('')}
           ${renderCustomScenarioOptions(state)}
         </select>
         <button class="btn btn-outline" id="btn-mode-libre">Mode libre</button>
-        <button class="btn btn-outline" id="btn-sauvegarder-scenario" title="Sauvegarder les parametres actuels comme scenario personnalise">
+        <button class="btn btn-outline" id="btn-sauvegarder-scenario" title="Sauvegarder les paramètres actuels comme scénario personnalisé">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Sauvegarder
         </button>
@@ -48,8 +48,8 @@ export async function render(container) {
         <div style="font-size: 0.82rem; font-weight: 600; color: var(--gray-700); margin-bottom: 8px;">Sauvegarder ce scenario</div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: end;">
           <div style="flex: 1; min-width: 160px;">
-            <label style="font-size: 0.75rem; color: var(--gray-500); display: block; margin-bottom: 2px;">Nom du scenario</label>
-            <input type="text" id="custom-scenario-nom" placeholder="Ex: Crise engrais + secheresse" style="width: 100%; padding: 6px 10px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 0.82rem;" />
+            <label style="font-size: 0.75rem; color: var(--gray-500); display: block; margin-bottom: 2px;">Nom du scénario</label>
+            <input type="text" id="custom-scenario-nom" placeholder="Ex: Crise engrais + sécheresse" style="width: 100%; padding: 6px 10px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 0.82rem;" />
           </div>
           <div style="flex: 1; min-width: 160px;">
             <label style="font-size: 0.75rem; color: var(--gray-500); display: block; margin-bottom: 2px;">Description courte</label>
@@ -66,20 +66,20 @@ export async function render(container) {
     </div>
 
     <div class="card mt-4">
-      <div class="card-header">Parametres</div>
+      <div class="card-header">Paramètres</div>
       <div class="grid-2">
         <div>
           <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Prix des intrants</h4>
-          ${renderSlider('Prix engrais azotes', 'slider-engrais-n', 0.5, 2.0, 1.0, 0.05)}
+          ${renderSlider('Prix engrais azotés', 'slider-engrais-n', 0.5, 2.0, 1.0, 0.05)}
           ${renderSlider('Prix GNR', 'slider-gnr', 0.5, 2.0, 1.0, 0.05)}
           ${renderSlider('Prix phytos', 'slider-phytos', 0.7, 1.5, 1.0, 0.05)}
           ${renderSlider('Prix semences', 'slider-semences', 0.8, 1.3, 1.0, 0.05)}
         </div>
         <div>
           <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Prix de vente et rendements</h4>
-          ${renderSlider('Prix ble tendre', 'slider-prix-ble', 0.5, 1.5, 1.0, 0.05)}
+          ${renderSlider('Prix blé tendre', 'slider-prix-ble', 0.5, 1.5, 1.0, 0.05)}
           ${renderSlider('Prix colza', 'slider-prix-colza', 0.5, 1.5, 1.0, 0.05)}
-          ${renderSlider('Prix mais', 'slider-prix-mais', 0.5, 1.5, 1.0, 0.05)}
+          ${renderSlider('Prix maïs', 'slider-prix-mais', 0.5, 1.5, 1.0, 0.05)}
           ${renderSlider('Rendements (global)', 'slider-rendements', 0.4, 1.2, 1.0, 0.05)}
         </div>
       </div>
@@ -118,7 +118,7 @@ export async function render(container) {
     setSlider('slider-rendements', sc.multiplicateurs.rendements?.defaut || 1);
     // Show delete option for custom scenarios
     if (sc.custom) {
-      deleteText.textContent = `Scenario personnalise : "${sc.nom}"`;
+      deleteText.textContent = `Scénario personnalisé : "${sc.nom}"`;
       deleteInfo.style.display = 'block';
     }
   });
@@ -133,7 +133,7 @@ export async function render(container) {
   document.getElementById('btn-mode-libre').addEventListener('click', () => {
     selectEl.value = '';
     deleteInfo.style.display = 'none';
-    document.getElementById('scenario-desc').textContent = 'Mode libre - ajustez les sliders manuellement';
+    document.getElementById('scenario-desc').textContent = 'Mode libre — ajustez les sliders manuellement';
   });
 
   // Save custom scenario — show form
@@ -158,7 +158,7 @@ export async function render(container) {
       document.getElementById('custom-scenario-nom').focus();
       return;
     }
-    const desc = document.getElementById('custom-scenario-desc').value.trim() || 'Scenario personnalise';
+    const desc = document.getElementById('custom-scenario-desc').value.trim() || 'Scénario personnalisé';
 
     const newScenario = {
       id: 'custom-' + Date.now(),
@@ -254,7 +254,7 @@ export async function render(container) {
       : {
           id: 'libre',
           nom: 'Mode libre',
-          description: 'Parametres personnalises',
+          description: 'Paramètres personnalisés',
           multiplicateurs: customMult
         };
 
@@ -293,13 +293,13 @@ function renderResultats(res, expl) {
     <div class="kpi-grid mt-4">
       ${renderDeltaKPI('EBE', d.ebe)}
       ${renderDeltaKPI('RCAI', d.rcai)}
-      ${renderDeltaKPI('Tresorerie min', d.tresorerieMin)}
-      ${renderDeltaKPI('Resilience', d.resilience, true)}
+      ${renderDeltaKPI('Trésorerie min', d.tresorerieMin)}
+      ${renderDeltaKPI('Résilience', d.resilience, true)}
     </div>
 
     <div class="grid-2 mt-4">
       <div class="card">
-        <div class="card-header">Tresorerie mensuelle (avant vs apres)</div>
+        <div class="card-header">Trésorerie mensuelle (avant vs après)</div>
         <div class="chart-container">
           <canvas id="chart-treso-sim"></canvas>
         </div>
@@ -312,7 +312,7 @@ function renderResultats(res, expl) {
               <tr>
                 <th>Culture</th>
                 <th class="text-right">CdP/t avant</th>
-                <th class="text-right">CdP/t apres</th>
+                <th class="text-right">CdP/t après</th>
                 <th class="text-right">Variation</th>
               </tr>
             </thead>
@@ -335,14 +335,14 @@ function renderResultats(res, expl) {
     </div>
 
     <div class="card mt-4">
-      <div class="card-header">Tableau comparatif AVANT / APRES scenario</div>
+      <div class="card-header">Tableau comparatif AVANT / APRÈS scénario</div>
       <div class="table-container">
         <table class="comparison-table">
           <thead>
             <tr>
               <th>Indicateur</th>
               <th class="text-right">AVANT</th>
-              <th class="text-right">APRES</th>
+              <th class="text-right">APRÈS</th>
               <th class="text-right">Variation</th>
             </tr>
           </thead>
@@ -354,7 +354,7 @@ function renderResultats(res, expl) {
               <td class="text-right">${fmtDelta(res.apres.sig.produitBrut - res.avant.sig.produitBrut)}</td>
             </tr>
             <tr>
-              <td>Charges operationnelles</td>
+              <td>Charges opérationnelles</td>
               <td class="text-right avant">${fmtM(res.avant.sig.chargesOpe)}</td>
               <td class="text-right apres">${fmtM(res.apres.sig.chargesOpe)}</td>
               <td class="text-right">${fmtDelta(res.apres.sig.chargesOpe - res.avant.sig.chargesOpe)}</td>
@@ -378,7 +378,7 @@ function renderResultats(res, expl) {
               <td class="text-right">${fmtDelta(d.rcai.delta)}</td>
             </tr>
             <tr>
-              <td>BFR max (besoin tresorerie)</td>
+              <td>BFR max (besoin trésorerie)</td>
               <td class="text-right avant">${fmtM(res.avant.indicTreso?.bfr || 0)}</td>
               <td class="text-right apres">${fmtM(res.apres.indicTreso?.bfr || 0)}</td>
               <td class="text-right">${fmtDelta((res.apres.indicTreso?.bfr || 0) - (res.avant.indicTreso?.bfr || 0))}</td>
@@ -416,7 +416,7 @@ function renderTresoChart(planAvant, planApres) {
       labels,
       datasets: [
         {
-          label: 'Avant scenario',
+          label: 'Avant scénario',
           data: dataAvant,
           borderColor: COLORS.steel,
           backgroundColor: COLORS.steelBg,
@@ -430,7 +430,7 @@ function renderTresoChart(planAvant, planApres) {
           pointBackgroundColor: COLORS.steel
         },
         {
-          label: 'Apres scenario',
+          label: 'Après scénario',
           data: dataApres,
           borderColor: COLORS.negative,
           backgroundColor: COLORS.negativeBg,
@@ -576,22 +576,22 @@ function fmtDelta(n) {
 /** Translate internal culture keys to human-readable French labels */
 function formatCultureName(key) {
   const names = {
-    ble_tendre: 'Ble tendre',
-    ble_dur: 'Ble dur',
+    ble_tendre: 'Blé tendre',
+    ble_dur: 'Blé dur',
     orge_hiver: 'Orge hiver',
     orge_printemps: 'Orge print.',
     orge_printemps_brass: 'Orge brass.',
     colza: 'Colza',
-    mais_grain: 'Mais grain',
-    mais_grain_irrigue: 'Mais irrigue',
+    mais_grain: 'Maïs grain',
+    mais_grain_irrigue: 'Maïs irrigué',
     tournesol: 'Tournesol',
     pois: 'Pois',
-    feverole: 'Feverole',
+    feverole: 'Féverole',
     betterave_sucriere: 'Betterave',
     pomme_terre: 'Pomme de terre',
     lin_fibre: 'Lin fibre',
     soja: 'Soja',
-    soja_irrigue: 'Soja irrigue',
+    soja_irrigue: 'Soja irrigué',
     sorgho: 'Sorgho',
     triticale: 'Triticale',
     lentille_puy: 'Lentille Puy',
@@ -608,7 +608,7 @@ function formatCultureName(key) {
 function renderCustomScenarioOptions(state) {
   const custom = getScenariosCustom();
   if (custom.length === 0) return '';
-  let html = '<option disabled>--- Mes scenarios ---</option>';
+  let html = '<option disabled>--- Mes scénarios ---</option>';
   html += custom.map(s =>
     `<option value="${s.id}" ${state.scenarioActif === s.id ? 'selected' : ''}>${s.nom} [Custom]</option>`
   ).join('');
@@ -618,7 +618,7 @@ function renderCustomScenarioOptions(state) {
 /** Refresh custom scenario options in the dropdown without touching predefined ones */
 function refreshCustomOptions(selectEl, predefinedScenarios) {
   const state = getEtat();
-  let html = '<option value="">-- Choisir un scenario --</option>';
+  let html = '<option value="">-- Choisir un scénario --</option>';
   html += predefinedScenarios.map(s =>
     `<option value="${s.id}" ${state.scenarioActif === s.id ? 'selected' : ''}>${s.nom}</option>`
   ).join('');

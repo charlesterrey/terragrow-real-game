@@ -47,7 +47,7 @@ export async function render(container) {
   const annEbe = sig.ebe > 0 ? Math.round((expl.annuites_total || 0) / sig.ebe * 100) : 999;
   const rk = expl.region.replace(/-/g, '_');
   const RC = { beauce: { bg: '#DBEAFE', text: '#1D4ED8' }, nord_picardie: { bg: '#DCFCE7', text: '#15803D' }, bretagne: { bg: '#FEF3C7', text: '#B45309' }, sud_ouest: { bg: '#FEE2E2', text: '#DC2626' }, rhone_alpes: { bg: '#EDE9FE', text: '#7C3AED' } };
-  const RL = { beauce: 'Beauce', nord_picardie: 'Nord-Picardie', bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhone-Alpes' };
+  const RL = { beauce: 'Beauce', nord_picardie: 'Nord-Picardie', bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhône-Alpes' };
   const rc = RC[rk] || { bg: '#F3F4F6', text: '#4B5563' };
 
   container.innerHTML = `
@@ -111,7 +111,7 @@ export async function render(container) {
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
         <div style="text-align: right;">
-          <div style="font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400);">Resilience</div>
+          <div style="font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400);">Résilience</div>
           <div style="font-size: 20px; font-weight: 700; color: ${resil.couleur}; font-variant-numeric: tabular-nums; line-height: 1.2;">${resil.score}<span style="font-size: 12px; font-weight: 500; color: var(--gray-400);">/100</span></div>
         </div>
       </div>
@@ -125,7 +125,7 @@ export async function render(container) {
       ${prop('Forme juridique', expl.forme_juridique)}
       ${prop('Main d\'oeuvre', expl.uth_total + ' UTH')}
       ${prop('Fermage', expl.sau_fermage + ' ha (' + Math.round(expl.sau_fermage / expl.sau_totale * 100) + '%)')}
-      ${prop('Annuites', fm(expl.annuites_total || 0))}
+      ${prop('Annuités', fm(expl.annuites_total || 0))}
       ${prop('Endettement', fm(expl.emprunts?.reduce((s, e) => s + e.capital_restant, 0) || 0))}
       ${prop('Charges structure', fm(expl.charges_structure_total))}
       ${prop('Exercice', annee + ' (' + (ref.annees[annee]?.label || '') + ')')}
@@ -136,7 +136,7 @@ export async function render(container) {
       <button class="fc-tab active" data-section="overview" onclick="showFcSection('overview')">Vue d'ensemble</button>
       <button class="fc-tab" data-section="assolement" onclick="showFcSection('assolement')">Assolement</button>
       <button class="fc-tab" data-section="sig" onclick="showFcSection('sig')">SIG</button>
-      <button class="fc-tab" data-section="cdp" onclick="showFcSection('cdp')">Couts de production</button>
+      <button class="fc-tab" data-section="cdp" onclick="showFcSection('cdp')">Coûts de production</button>
       <button class="fc-tab" data-section="patrimoine" onclick="showFcSection('patrimoine')">Patrimoine</button>
       <button class="fc-tab" data-section="diagnostic" onclick="showFcSection('diagnostic')">Diagnostic</button>
     </div>
@@ -147,9 +147,9 @@ export async function render(container) {
         ${kpi('Produit brut', fm(sig.produitBrut), '', Math.round(sig.produitBrut / expl.sau_totale) + ' EUR/ha', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>')}
         ${kpi('Marge brute', fm(sig.margeBrute), sig.margeBrute > 0 ? 'ok' : 'critique', Math.round(sig.margeBrute / expl.sau_totale) + ' EUR/ha', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>')}
         ${kpi('EBE', fm(sig.ebe), ratios.alerteEbe, Math.round(sig.ebe / expl.sau_totale) + ' EUR/ha', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>')}
-        ${kpi('RCAI', fm(sig.rcai), ratios.alerteRcai, sig.rcai >= 0 ? 'Benefice' : 'Perte', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>')}
-        ${kpi('Tresorerie min.', fm(indT.tresorerieMin || 0), (indT.tresorerieMin || 0) < 0 ? 'critique' : 'ok', indT.moisCritique ? 'Mois : ' + indT.moisCritique : '', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 100 4h4v-4h-4z"/></svg>')}
-        ${kpi('Annuites / EBE', (annEbe < 999 ? annEbe + '%' : '--'), ratios.alerteAnnuites, annEbe > 60 ? 'Sous tension' : 'Correct', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>')}
+        ${kpi('RCAI', fm(sig.rcai), ratios.alerteRcai, sig.rcai >= 0 ? 'Bénéfice' : 'Perte', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>')}
+        ${kpi('Trésorerie min.', fm(indT.tresorerieMin || 0), (indT.tresorerieMin || 0) < 0 ? 'critique' : 'ok', indT.moisCritique ? 'Mois : ' + indT.moisCritique : '', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 100 4h4v-4h-4z"/></svg>')}
+        ${kpi('Annuités / EBE', (annEbe < 999 ? annEbe + '%' : '--'), ratios.alerteAnnuites, annEbe > 60 ? 'Sous tension' : 'Correct', '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>')}
       </div>
     </div>
 
@@ -176,10 +176,10 @@ export async function render(container) {
     <!-- SIG -->
     <div id="section-sig" class="fc-section" style="display:none;">
       <div class="card" style="padding: 16px;">
-        ${sigLine('Ventes de recolte', sig.ventes)}
+        ${sigLine('Ventes de récolte', sig.ventes)}
         ${sigLine('Aides PAC', sig.aides)}
         ${sigLine('Produit brut', sig.produitBrut, true, true)}
-        ${sigLine('Charges operationnelles', -sig.chargesOpe, false, false, true)}
+        ${sigLine('Charges opérationnelles', -sig.chargesOpe, false, false, true)}
         ${sigLine('Marge brute', sig.margeBrute, true)}
         ${sigLine('Charges de structure', -sig.chargesStructure, false, false, true)}
         ${sigLine('EBE', sig.ebe, true, true)}
@@ -223,7 +223,7 @@ export async function render(container) {
     <div id="section-patrimoine" class="fc-section" style="display:none;">
       <div class="grid-2">
         <div class="card">
-          <div class="card-header">Materiel</div>
+          <div class="card-header">Matériel</div>
           <div style="max-height: 320px; overflow-y: auto;">
             ${(expl.materiel || []).map(m => `
               <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:12px;">
@@ -250,7 +250,7 @@ export async function render(container) {
             `).join('')}
           </div>
           <div class="card">
-            <div class="card-header">Batiments</div>
+            <div class="card-header">Bâtiments</div>
             ${(expl.batiments || []).map(b => `
               <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:12px;">
                 <span style="color:var(--gray-700);">${b.nom}</span>
@@ -282,10 +282,10 @@ const chartColors = ['#3B82F6','#F59E0B','#10B981','#8B5CF6','#EF4444','#EC4899'
 
 function renderAlerts(sig, annEbe, indT) {
   const alerts = [];
-  if (sig.rcai < 0) alerts.push({ text: 'RCAI negatif -- l\'exploitation perd de l\'argent', type: 'danger' });
-  if (annEbe > 80) alerts.push({ text: 'Annuites/EBE a ' + annEbe + '% -- capacite de remboursement critique', type: 'danger' });
-  else if (annEbe > 50) alerts.push({ text: 'Annuites/EBE a ' + annEbe + '% -- vigilance requise', type: 'warning' });
-  if ((indT.tresorerieMin || 0) < 0) alerts.push({ text: 'Tresorerie negative en ' + (indT.moisCritique || '?') + ' (' + fm(indT.tresorerieMin) + ')', type: 'danger' });
+  if (sig.rcai < 0) alerts.push({ text: 'RCAI négatif — l\'exploitation perd de l\'argent', type: 'danger' });
+  if (annEbe > 80) alerts.push({ text: 'Annuités/EBE à ' + annEbe + '% — capacité de remboursement critique', type: 'danger' });
+  else if (annEbe > 50) alerts.push({ text: 'Annuités/EBE à ' + annEbe + '% — vigilance requise', type: 'warning' });
+  if ((indT.tresorerieMin || 0) < 0) alerts.push({ text: 'Trésorerie négative en ' + (indT.moisCritique || '?') + ' (' + fm(indT.tresorerieMin) + ')', type: 'danger' });
   if (!alerts.length) return '';
   return `<div style="margin-bottom: 16px;">${alerts.map(a => `<div class="alert alert-${a.type}">${a.text}</div>`).join('')}</div>`;
 }
@@ -326,7 +326,7 @@ function calcAides(expl, annee, ref) {
 function fm(n) { return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n || 0); }
 function fmtKv(n) { if (Math.abs(n) >= 1000) return Math.round(n / 1000) + 'k'; return Math.round(n) + ''; }
 function fmtC(k) {
-  return { ble_tendre:'Ble tendre', ble_dur:'Ble dur', orge_hiver:'Orge hiver', orge_printemps:'Orge printemps', colza:'Colza', mais_grain:'Mais grain', mais_grain_irrigue:'Mais irrigue', tournesol:'Tournesol', pois:'Pois', feverole:'Feverole', betterave_sucriere:'Betterave', pomme_terre:'Pomme de terre', lin_fibre:'Lin fibre', soja:'Soja', soja_irrigue:'Soja irrigue', sorgho:'Sorgho', triticale:'Triticale', lentille_puy:'Lentille du Puy', haricots_verts:'Haricots verts', petits_pois:'Petits pois', prairie_foin:'Prairie foin' }[k] || k;
+  return { ble_tendre:'Blé tendre', ble_dur:'Blé dur', orge_hiver:'Orge hiver', orge_printemps:'Orge printemps', colza:'Colza', mais_grain:'Maïs grain', mais_grain_irrigue:'Maïs irrigué', tournesol:'Tournesol', pois:'Pois', feverole:'Féverole', betterave_sucriere:'Betterave', pomme_terre:'Pomme de terre', lin_fibre:'Lin fibre', soja:'Soja', soja_irrigue:'Soja irrigué', sorgho:'Sorgho', triticale:'Triticale', lentille_puy:'Lentille du Puy', haricots_verts:'Haricots verts', petits_pois:'Petits pois', prairie_foin:'Prairie foin' }[k] || k;
 }
 
 // ─── Diagnostic section rendering ───
@@ -358,18 +358,18 @@ function renderDiagnosticSection(diag) {
       </div>
       <div>
         <div style="font-size:18px;font-weight:700;color:var(--gray-900);margin-bottom:2px;">Diagnostic : ${diag.noteLabel}</div>
-        <div style="font-size:13px;color:var(--gray-500);">${diag.forces.length} point(s) fort(s), ${diag.faiblesses.length} faiblesse(s) identifiee(s), ${diag.risques.length} risque(s)</div>
+        <div style="font-size:13px;color:var(--gray-500);">${diag.forces.length} point(s) fort(s), ${diag.faiblesses.length} faiblesse(s) identifiée(s), ${diag.risques.length} risque(s)</div>
       </div>
     </div>
   `;
 
   // --- Ratios cles ---
   const ratioKeys = [
-    { key: 'annuitesEbe', label: 'Annuites / EBE' },
+    { key: 'annuitesEbe', label: 'Annuités / EBE' },
     { key: 'ebeHa', label: 'EBE / ha' },
-    { key: 'tresorerieHa', label: 'Tresorerie min. / ha' },
+    { key: 'tresorerieHa', label: 'Trésorerie min. / ha' },
     { key: 'chargesStructureHa', label: 'Charges struct. / ha' },
-    { key: 'margeSecurite', label: 'Marge de securite' },
+    { key: 'margeSecurite', label: 'Marge de sécurité' },
     { key: 'tauxEndettement', label: 'Taux d\'endettement' },
     { key: 'diversification', label: 'Diversification (Shannon)' },
     { key: 'rcaiHa', label: 'RCAI / ha' }
@@ -377,7 +377,7 @@ function renderDiagnosticSection(diag) {
 
   const ratiosHtml = `
     <div class="card" style="padding:16px;margin-bottom:20px;">
-      <div class="card-header" style="margin-bottom:12px;">Ratios cles</div>
+      <div class="card-header" style="margin-bottom:12px;">Ratios clés</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:10px;">
         ${ratioKeys.map(rk => {
           const r = diag.ratios[rk.key];
@@ -471,7 +471,7 @@ function renderDiagnosticSection(diag) {
   // --- Prevision tresorerie ---
   const tresoHtml = `
     <div class="card" style="padding:16px;margin-bottom:20px;">
-      <div class="card-header" style="margin-bottom:12px;">Prevision tresorerie</div>
+      <div class="card-header" style="margin-bottom:12px;">Prévision trésorerie</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:10px;margin-bottom:12px;">
         <div style="padding:10px;border-radius:8px;background:var(--gray-50);text-align:center;">
           <div style="font-size:11px;color:var(--gray-400);text-transform:uppercase;margin-bottom:2px;">Mois critique</div>
@@ -482,7 +482,7 @@ function renderDiagnosticSection(diag) {
           <div style="font-size:16px;font-weight:700;color:${diag.previsionTresorerie.besoinMaximal < 0 ? '#DC2626' : '#15803D'};">${fm(diag.previsionTresorerie.besoinMaximal)}</div>
         </div>
         <div style="padding:10px;border-radius:8px;background:${diag.previsionTresorerie.dureeNegative > 0 ? '#FEF3C7' : '#DCFCE7'};text-align:center;">
-          <div style="font-size:11px;color:var(--gray-400);text-transform:uppercase;margin-bottom:2px;">Mois en negatif</div>
+          <div style="font-size:11px;color:var(--gray-400);text-transform:uppercase;margin-bottom:2px;">Mois en négatif</div>
           <div style="font-size:16px;font-weight:700;color:${diag.previsionTresorerie.dureeNegative > 0 ? '#92400E' : '#15803D'};">${diag.previsionTresorerie.dureeNegative}</div>
         </div>
       </div>
@@ -494,14 +494,14 @@ function renderDiagnosticSection(diag) {
   const sensi = diag.sensibilite;
   const sensibiliteHtml = sensi ? `
     <div class="card" style="padding:16px;margin-bottom:20px;">
-      <div class="card-header" style="margin-bottom:12px;">Analyse de sensibilite</div>
+      <div class="card-header" style="margin-bottom:12px;">Analyse de sensibilité</div>
       <div style="overflow-x:auto;">
         <table style="width:100%;border-collapse:collapse;font-size:12px;">
           <thead>
             <tr>
-              <th style="padding:8px 12px;text-align:left;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gray-200);font-size:11px;">Scenario</th>
+              <th style="padding:8px 12px;text-align:left;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gray-200);font-size:11px;">Scénario</th>
               <th style="padding:8px 12px;text-align:right;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gray-200);font-size:11px;">Perte CA</th>
-              <th style="padding:8px 12px;text-align:right;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gray-200);font-size:11px;">EBE apres</th>
+              <th style="padding:8px 12px;text-align:right;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gray-200);font-size:11px;">EBE après</th>
               <th style="padding:8px 12px;text-align:left;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--gray-200);font-size:11px;">Verdict</th>
             </tr>
           </thead>

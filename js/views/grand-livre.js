@@ -25,11 +25,11 @@ export async function render(container) {
       </h2>
       <div class="card">
         <p style="padding: 20px; text-align: center; color: var(--text-light);">
-          Les ecritures comptables pour cette exploitation et cette annee ne sont pas encore generees.<br>
+          Les écritures comptables pour cette exploitation et cette année ne sont pas encore générées.<br>
           Les grands livres seront disponibles prochainement.
         </p>
         <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
-          En attendant, les calculs (CdP, SIG, tresorerie) sont effectues a partir des donnees agregees du profil exploitation.
+          En attendant, les calculs (CdP, SIG, trésorerie) sont effectués à partir des données agrégées du profil exploitation.
         </p>
       </div>
     `;
@@ -50,7 +50,7 @@ export async function render(container) {
         Grand Livre - ${expl.nom} - ${annee}
       </h2>
       <div>
-        <span style="color: var(--text-muted); font-size: 0.85rem; margin-right: 12px;">${ecritures.length} ecritures</span>
+        <span style="color: var(--text-muted); font-size: 0.85rem; margin-right: 12px;">${ecritures.length} écritures</span>
         <button class="btn btn-outline" id="btn-export-csv">Exporter CSV</button>
       </div>
     </div>
@@ -87,7 +87,7 @@ export async function render(container) {
       </div>
       <div class="filter-group">
         <label>Recherche</label>
-        <input type="text" id="filter-texte" placeholder="Libelle..." />
+        <input type="text" id="filter-texte" placeholder="Libellé..." />
       </div>
     </div>
 
@@ -97,10 +97,10 @@ export async function render(container) {
           <tr>
             <th data-col="date" onclick="sortGL('date')">Date</th>
             <th data-col="journal" onclick="sortGL('journal')">Journal</th>
-            <th data-col="piece" onclick="sortGL('piece')">Piece</th>
-            <th data-col="libelle" onclick="sortGL('libelle')">Libelle</th>
-            <th data-col="compte_debit" onclick="sortGL('compte_debit')">Debit</th>
-            <th data-col="compte_credit" onclick="sortGL('compte_credit')">Credit</th>
+            <th data-col="piece" onclick="sortGL('piece')">Pièce</th>
+            <th data-col="libelle" onclick="sortGL('libelle')">Libellé</th>
+            <th data-col="compte_debit" onclick="sortGL('compte_debit')">Débit</th>
+            <th data-col="compte_credit" onclick="sortGL('compte_credit')">Crédit</th>
             <th data-col="montant_ht" onclick="sortGL('montant_ht')">Montant HT</th>
             <th data-col="analytique" onclick="sortGL('analytique')">Analytique</th>
           </tr>
@@ -184,7 +184,7 @@ function filterAndRender() {
   const tfoot = document.getElementById('gl-tfoot');
   tfoot.innerHTML = `
     <tr>
-      <td colspan="4" class="font-bold">${filtered.length} ecriture${filtered.length > 1 ? 's' : ''}</td>
+      <td colspan="4" class="font-bold">${filtered.length} écriture${filtered.length > 1 ? 's' : ''}</td>
       <td class="text-right font-bold">${formatNum(totalDebit)}</td>
       <td class="text-right font-bold">${formatNum(totalCredit)}</td>
       <td class="text-right font-bold" style="color: ${solde >= 0 ? 'var(--success, #22c55e)' : 'var(--danger, #ef4444)'};">
@@ -193,13 +193,13 @@ function filterAndRender() {
       <td></td>
     </tr>
     <tr>
-      <td colspan="4" style="font-size: 0.75rem; color: var(--text-muted);">Solde = Debits - Credits</td>
+      <td colspan="4" style="font-size: 0.75rem; color: var(--text-muted);">Solde = Débits - Crédits</td>
       <td colspan="4"></td>
     </tr>
   `;
 
   document.getElementById('gl-count').textContent =
-    `${filtered.length} / ${ecritures.length} ecritures affichees`;
+    `${filtered.length} / ${ecritures.length} écritures affichées`;
 
   // Update sort indicators in headers
   document.querySelectorAll('#gl-table thead th').forEach(th => {
@@ -216,8 +216,8 @@ function filterAndRender() {
 function exportCSV() {
   const ecritures = window._glFiltered || [];
   const headers = [
-    'Date', 'Journal', 'Piece', 'Libelle',
-    'Compte Debit', 'Compte Credit',
+    'Date', 'Journal', 'Pièce', 'Libellé',
+    'Compte Débit', 'Compte Crédit',
     'Montant HT', 'TVA Taux', 'TVA', 'Montant TTC',
     'Analytique'
   ];

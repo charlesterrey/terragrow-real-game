@@ -54,15 +54,15 @@ export async function render(container) {
   const fn = n => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(n || 0);
   const fp = n => (n >= 0 ? '+' : '') + fn(n);
   const fc = k => ({
-    ble_tendre: 'Ble tendre', ble_dur: 'Ble dur', orge_hiver: 'Orge hiver',
-    orge_printemps: 'Orge print.', colza: 'Colza', mais_grain: 'Mais grain',
-    mais_grain_irrigue: 'Mais irr.', tournesol: 'Tournesol', pois: 'Pois',
-    feverole: 'Feverole', betterave_sucriere: 'Betterave', pomme_terre: 'Pdt',
+    ble_tendre: 'Blé tendre', ble_dur: 'Blé dur', orge_hiver: 'Orge hiver',
+    orge_printemps: 'Orge print.', colza: 'Colza', mais_grain: 'Maïs grain',
+    mais_grain_irrigue: 'Maïs irr.', tournesol: 'Tournesol', pois: 'Pois',
+    feverole: 'Féverole', betterave_sucriere: 'Betterave', pomme_terre: 'Pdt',
     lin_fibre: 'Lin', soja: 'Soja', soja_irrigue: 'Soja irr.', sorgho: 'Sorgho',
     triticale: 'Triticale', lentille_puy: 'Lentille', haricots_verts: 'H. verts',
     petits_pois: 'P. pois', prairie_foin: 'Prairie'
   }[k] || k);
-  const rn = k => ({ beauce: 'Beauce', nord_picardie: 'Nord-Picardie', bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhone-Alpes' }[k] || k);
+  const rn = k => ({ beauce: 'Beauce', nord_picardie: 'Nord-Picardie', bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhône-Alpes' }[k] || k);
   const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   const nom = state.nomEquipe
     ? `${state.nomEquipe}${state.etudiant1 ? ' — ' + state.etudiant1 : ''}${state.etudiant2 ? ' & ' + state.etudiant2 : ''}`
@@ -94,7 +94,7 @@ export async function render(container) {
     <div style="color:var(--gray-500);margin-top:4px;">${expl.exploitant} — ${expl.commune}</div>
     <div style="color:var(--gray-500);">${rn(expl.region)} | ${expl.sau_totale} ha | ${expl.forme_juridique}</div>
     ${nom ? `<div style="margin-top:40px;padding:16px 32px;background:var(--gray-50);border-radius:8px;border:1px solid var(--gray-200);">
-      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:4px;">Realise par</div>
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:4px;">Réalisé par</div>
       <div style="font-size:1.1rem;font-weight:600;color:var(--gray-800);">${nom}</div>
     </div>` : ''}
     <div style="margin-top:auto;padding-top:40px;font-size:0.85rem;color:var(--gray-400);">${date}</div>
@@ -102,7 +102,7 @@ export async function render(container) {
 
   // ===================== PAGE 2: FICHE D'IDENTITE =====================
   html += `<div class="rapport-page page-break">
-    <div class="rapport-section-header">1. Fiche d'identite de l'exploitation</div>
+    <div class="rapport-section-header">1. Fiche d'identité de l'exploitation</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
       <div class="rapport-info-block">
         <div class="rapport-info-row"><span>Exploitant</span><strong>${expl.exploitant}</strong></div>
@@ -112,21 +112,21 @@ export async function render(container) {
       </div>
       <div class="rapport-info-block">
         <div class="rapport-info-row"><span>SAU totale</span><strong>${expl.sau_totale} ha</strong></div>
-        <div class="rapport-info-row"><span>dont propriete</span><strong>${expl.sau_propriete || 0} ha</strong></div>
+        <div class="rapport-info-row"><span>dont propriété</span><strong>${expl.sau_propriete || 0} ha</strong></div>
         <div class="rapport-info-row"><span>dont fermage</span><strong>${expl.sau_fermage || 0} ha</strong></div>
         <div class="rapport-info-row"><span>UTH</span><strong>${expl.uth_total}</strong></div>
       </div>
     </div>
-    <div class="rapport-sub-header">Assolement (annee ${annee})</div>
+    <div class="rapport-sub-header">Assolement (année ${annee})</div>
     <table class="rapport-table"><thead><tr><th>Culture</th><th class="text-right">Surface (ha)</th><th class="text-right">% SAU</th><th class="text-right">Rendement</th></tr></thead><tbody>
     ${assol.map(c => `<tr><td>${fc(c.culture)}</td><td class="text-right">${c.surface}</td><td class="text-right">${Math.round(c.surface / expl.sau_totale * 100)}%</td><td class="text-right">${c.rendement_realise || c.rendement_vise || '-'} q/ha</td></tr>`).join('')}
     <tr class="rapport-table-total"><td>TOTAL</td><td class="text-right">${expl.sau_totale}</td><td class="text-right">100%</td><td></td></tr>
     </tbody></table>
-    <div class="rapport-sub-header" style="margin-top:20px;">Indicateurs cles</div>
+    <div class="rapport-sub-header" style="margin-top:20px;">Indicateurs clés</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
       ${rpKpi('EBE', fm(sig.ebe), sig.ebe > 0 ? 'var(--green-700)' : 'var(--red-500)')}
       ${rpKpi('RCAI', fm(sig.rcai), sig.rcai >= 0 ? 'var(--green-700)' : 'var(--red-500)')}
-      ${rpKpi('Resilience', rl.score + '/100', rl.couleur)}
+      ${rpKpi('Résilience', rl.score + '/100', rl.couleur)}
       ${rpKpi('Annuites/EBE', Math.round(ratios?.annuitesEbe || 0) + '%', (ratios?.annuitesEbe || 0) > 50 ? 'var(--red-500)' : 'var(--green-700)')}
     </div>
   </div>`;
@@ -138,14 +138,14 @@ export async function render(container) {
     html += `<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--gray-50);border-radius:8px;border:1px solid var(--gray-200);">
       <div style="font-size:3rem;font-weight:900;${gc(diag.noteCouleur)}">${diag.noteGlobale}</div>
       <div><div style="font-size:1.1rem;font-weight:700;color:var(--gray-800);">Note globale : ${diag.noteLabel}</div>
-      <div style="font-size:0.85rem;color:var(--gray-500);">Basee sur 8 ratios structurels (CER France)</div></div>
+      <div style="font-size:0.85rem;color:var(--gray-500);">Basée sur 8 ratios structurels (CER France)</div></div>
     </div>`;
     // Ratios table
     html += `<div class="rapport-sub-header">Ratios cles</div>
     <table class="rapport-table"><thead><tr><th>Indicateur</th><th class="text-right">Valeur</th><th>Alerte</th><th>Interpretation</th></tr></thead><tbody>`;
     const ratioNames = {
-      annuitesEbe: 'Annuites / EBE', ebeHa: 'EBE / ha', tresorerieHa: 'Tresorerie min / ha',
-      chargesStructureHa: 'Charges struct. / ha', margeSecurite: 'Marge securite moy.',
+      annuitesEbe: 'Annuités / EBE', ebeHa: 'EBE / ha', tresorerieHa: 'Trésorerie min / ha',
+      chargesStructureHa: 'Charges struct. / ha', margeSecurite: 'Marge sécurité moy.',
       tauxEndettement: 'Taux endettement', diversification: 'Diversification (Shannon)', rcaiHa: 'RCAI / ha'
     };
     for (const [k, r] of Object.entries(diag.ratios)) {
@@ -176,7 +176,7 @@ export async function render(container) {
 
   // ===================== PAGE 4: COUTS DE PRODUCTION =====================
   html += `<div class="rapport-page page-break">
-    <div class="rapport-section-header">3. Analyse des couts de production</div>
+    <div class="rapport-section-header">3. Analyse des coûts de production</div>
     <table class="rapport-table"><thead><tr><th>Culture</th><th class="text-right">Surface</th><th class="text-right">Rdt (t/ha)</th><th class="text-right">Ch. ope/ha</th><th class="text-right">Ch. meca/ha</th><th class="text-right">Ch. struct/ha</th><th class="text-right">CdP/ha</th><th class="text-right">CdP/t</th><th class="text-right">Prix vente</th><th class="text-right">Marge/t</th></tr></thead><tbody>
     ${cdp.map(c => `<tr>
       <td>${fc(c.culture)}</td>
