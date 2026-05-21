@@ -1,6 +1,6 @@
 // js/views/simulateur.js — Vue simulateur de scénarios (VUE CENTRALE DU JEU)
 import { chargerExploitation, chargerReferentiel, chargerITK, chargerScenarios, getEtat, sauvegarderEtat } from '../app.js';
-import { simulerScenario, calculerSituationComplete } from '../engine/simulation.js?v=2';
+import { simulerScenario, calculerSituationComplete } from '../engine/simulation.js?v=7';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression, getScenariosCustom, sauvegarderScenarioCustom, supprimerScenarioCustom } from '../state.js';
 import { COLORS, fmtEur, fmtK, applyFinancialDefaults, euroScale, categoryScale, legendTop, zeroLineGrid } from '../chart-config.js';

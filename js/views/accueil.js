@@ -1,6 +1,6 @@
 // js/views/accueil.js — Portfolio view avec scenario impact + progression
 import { chargerToutesExploitations, chargerReferentiel, chargerITK, chargerScenarios, getEtat, sauvegarderEtat } from '../app.js';
-import { calculerSituationComplete, simulerScenario } from '../engine/simulation.js?v=2';
+import { calculerSituationComplete, simulerScenario } from '../engine/simulation.js?v=7';
 import { getProgression, getProgressionGlobale, getScenariosCustom } from '../state.js';
 
 const STEPS = [

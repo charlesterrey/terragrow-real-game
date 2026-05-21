@@ -1,5 +1,5 @@
 // js/engine/conseil.js — Moteur de recommandation (leviers d'action)
-import { calculerSituationComplete } from './simulation.js?v=2';
+import { calculerSituationComplete } from './simulation.js?v=7';
 
 export function filtrerLeviers(tousLeviers, exploitation) {
   return tousLeviers.filter(l => {

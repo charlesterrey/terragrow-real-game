@@ -1,7 +1,7 @@
 // js/views/conseil-dashboard.js — Vue tableau de bord du conseil (progression multi-exploitations)
 import { chargerToutesExploitations, chargerReferentiel, chargerITK, getEtat } from '../app.js';
 import { COLORS, applyFinancialDefaults } from '../chart-config.js';
-import { calculerSituationComplete } from '../engine/simulation.js?v=2';
+import { calculerSituationComplete } from '../engine/simulation.js?v=7';
 import { getProgression, getProgressionGlobale } from '../state.js';
 
 const REGION_LABELS = {

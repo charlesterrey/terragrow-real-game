@@ -1,6 +1,6 @@
 // js/views/couts-production.js — Vue analyse CdP par culture
 import { chargerExploitation, chargerReferentiel, chargerITK, getEtat } from '../app.js';
-import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=2';
+import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=7';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression } from '../state.js';
 import { COLORS, fmtEur, fmtK, applyFinancialDefaults, euroScale, categoryScale, euroTooltip, euroTooltipWithTotal, legendTop, gridStyle } from '../chart-config.js';

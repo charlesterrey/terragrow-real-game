@@ -1,10 +1,10 @@
 // js/views/tableau-bord.js — Fiche client exploitation
 import { chargerExploitation, chargerReferentiel, chargerITK, chargerToutesExploitations, getEtat } from '../app.js';
-import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=2';
-import { calculerSIGAgrege, calculerRatios } from '../engine/sig.js?v=2';
-import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=2';
-import { calculerResilience } from '../engine/resilience.js?v=2';
-import { genererDiagnostic } from '../engine/diagnostic.js?v=2';
+import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=7';
+import { calculerSIGAgrege, calculerRatios } from '../engine/sig.js?v=7';
+import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=7';
+import { calculerResilience } from '../engine/resilience.js?v=7';
+import { genererDiagnostic } from '../engine/diagnostic.js?v=7';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression } from '../state.js';
 

@@ -1,8 +1,8 @@
 // js/engine/simulation.js — Moteur de simulation de scénarios
-import { calculerCoutsProduction, calculerResumeCdP } from './couts-production.js?v=2';
-import { calculerSIGAgrege, calculerRatios } from './sig.js?v=2';
-import { calculerTresorerieEstimee, calculerIndicateursTreso } from './tresorerie.js?v=2';
-import { calculerResilience } from './resilience.js?v=2';
+import { calculerCoutsProduction, calculerResumeCdP } from './couts-production.js?v=7';
+import { calculerSIGAgrege, calculerRatios } from './sig.js?v=7';
+import { calculerTresorerieEstimee, calculerIndicateursTreso } from './tresorerie.js?v=7';
+import { calculerResilience } from './resilience.js?v=7';
 
 export function simulerScenario(exploitation, annee, referentiel, itk, scenario, resultatsAvant = null) {
   if (!resultatsAvant) resultatsAvant = calculerSituationComplete(exploitation, annee, referentiel, itk);
