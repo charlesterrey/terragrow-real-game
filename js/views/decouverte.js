@@ -8,27 +8,29 @@ const fmt = new Intl.NumberFormat('fr-FR');
 const fmtE = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
 const CULTURE_LABELS = {
-  ble_tendre: 'Ble tendre', colza: 'Colza', orge_hiver: 'Orge d\'hiver',
-  betterave_sucriere: 'Betterave sucriere', ble_dur: 'Ble dur',
-  orge_printemps: 'Orge de printemps', pois: 'Pois proteagineux',
-  mais_grain: 'Mais grain', mais_irrigue: 'Mais irrigue',
-  tournesol: 'Tournesol', soja: 'Soja', lentille: 'Lentille',
-  pomme_de_terre: 'Pomme de terre', lin: 'Lin fibre',
-  sorgho: 'Sorgho', prairie: 'Prairie temporaire',
-  ble_tendre_bio: 'Ble tendre bio', triticale: 'Triticale'
+  ble_tendre: 'Blé tendre', colza: 'Colza', orge_hiver: 'Orge d\'hiver',
+  betterave_sucriere: 'Betterave sucrière', ble_dur: 'Blé dur',
+  orge_printemps: 'Orge de printemps', pois: 'Pois protéagineux',
+  mais_grain: 'Maïs grain', mais_grain_irrigue: 'Maïs irrigué', mais_irrigue: 'Maïs irrigué',
+  tournesol: 'Tournesol', soja: 'Soja', soja_irrigue: 'Soja irrigué', lentille: 'Lentille',
+  lentille_puy: 'Lentille du Puy', pomme_de_terre: 'Pomme de terre', pomme_terre: 'Pomme de terre',
+  lin: 'Lin fibre', lin_fibre: 'Lin fibre',
+  sorgho: 'Sorgho', prairie: 'Prairie temporaire', prairie_foin: 'Prairie (foin)',
+  feverole: 'Féverole', haricots_verts: 'Haricots verts', petits_pois: 'Petits pois',
+  ble_tendre_bio: 'Blé tendre bio', triticale: 'Triticale'
 };
 
 const REGION_LABELS = {
   beauce: 'Beauce (Centre)', nord_picardie: 'Nord-Picardie',
-  bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhone-Alpes'
+  bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhône-Alpes'
 };
 
 const REGION_CONTEXT = {
-  beauce: 'Sols limoneux profonds a tres fort potentiel cerealier. Climat oceanique degrade, pluviometrie 550-650 mm. Region de grandes cultures intensives. Risque principal : volatilite des prix sur marches mondiaux.',
-  nord_picardie: 'Limons battants tres fertiles, potentiel eleve. Climat oceanique, pluviometrie 650-750 mm. Forte diversification : betteraves, pommes de terre, lin, legumes. Pression fonciere importante.',
-  bretagne: 'Sols varies (schiste, granit, limon). Climat oceanique doux, pluviometrie > 800 mm. Polyculture-elevage dominant, grandes cultures en progression. Risque : adventices, pression phyto.',
-  sud_ouest: 'Boulbenes et terreforts. Climat oceanique a influence mediterraneenne, ete sec. Irrigation indispensable pour mais. Forte diversification : tournesol, soja, ble dur. Risque : secheresse estivale.',
-  rhone_alpes: 'Limagne : terres noires volcaniques tres fertiles. Velay : sols plus pauvres, altitude. Climat semi-continental. Diversification en lentille AOP, cultures de niche.'
+  beauce: 'Sols limoneux profonds à très fort potentiel céréalier. Climat océanique dégradé, pluviométrie 550-650 mm. Région de grandes cultures intensives. Risque principal : volatilité des prix sur marchés mondiaux.',
+  nord_picardie: 'Limons battants très fertiles, potentiel élevé. Climat océanique, pluviométrie 650-750 mm. Forte diversification : betteraves, pommes de terre, lin, légumes. Pression foncière importante.',
+  bretagne: 'Sols variés (schiste, granit, limon). Climat océanique doux, pluviométrie > 800 mm. Polyculture-élevage dominant, grandes cultures en progression. Risque : adventices, pression phyto.',
+  sud_ouest: 'Boulbènes et terreforts. Climat océanique à influence méditerranéenne, été sec. Irrigation indispensable pour maïs. Forte diversification : tournesol, soja, blé dur. Risque : sécheresse estivale.',
+  rhone_alpes: 'Limagne : terres noires volcaniques très fertiles. Velay : sols plus pauvres, altitude. Climat semi-continental. Diversification en lentille AOP, cultures de niche.'
 };
 
 const CHART_COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EF4444', '#EC4899', '#06B6D4', '#F97316'];
@@ -109,7 +111,7 @@ export async function render(container) {
           </div>
           <div class="kpi-value">${fmtE.format(totalEndettement)}</div>
           <div class="kpi-sub">
-            <span class="kpi-variation neutral">Annuites ${fmtE.format(totalAnnuites)}/an</span>
+            <span class="kpi-variation neutral">Annuités ${fmtE.format(totalAnnuites)}/an</span>
           </div>
         </div>
       </div>
@@ -185,14 +187,14 @@ export async function render(container) {
     <!-- MATERIEL -->
     <div class="accordion-item fade-in">
       <div class="accordion-header" onclick="this.closest('.accordion-item').classList.toggle('open')">
-        <span>Materiel et equipements (${(expl.materiel || []).length} postes &middot; Amort. total : ${fmtE.format(totalAmortMat)}/an)</span>
+        <span>Matériel et équipements (${(expl.materiel || []).length} postes &middot; Amort. total : ${fmtE.format(totalAmortMat)}/an)</span>
         <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="accordion-body">
         <div class="table-container">
           <table>
             <thead>
-              <tr><th>Equipement</th><th class="text-right">Valeur</th><th class="text-right">Annee</th><th class="text-right">Duree</th><th class="text-right">Amort./an</th></tr>
+              <tr><th>Équipement</th><th class="text-right">Valeur</th><th class="text-right">Année</th><th class="text-right">Durée</th><th class="text-right">Amort./an</th></tr>
             </thead>
             <tbody>
               ${(expl.materiel || []).map(m => `
@@ -216,14 +218,14 @@ export async function render(container) {
     <!-- EMPRUNTS -->
     <div class="accordion-item fade-in">
       <div class="accordion-header" onclick="this.closest('.accordion-item').classList.toggle('open')">
-        <span>Emprunts (${(expl.emprunts || []).length} lignes &middot; Annuites : ${fmtE.format(totalAnnuites)}/an)</span>
+        <span>Emprunts (${(expl.emprunts || []).length} lignes &middot; Annuités : ${fmtE.format(totalAnnuites)}/an)</span>
         <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="accordion-body">
         <div class="table-container">
           <table>
             <thead>
-              <tr><th>Objet</th><th class="text-right">Capital restant</th><th class="text-right">Taux</th><th class="text-right">Annuite</th><th class="text-right">Echeance</th></tr>
+              <tr><th>Objet</th><th class="text-right">Capital restant</th><th class="text-right">Taux</th><th class="text-right">Annuité</th><th class="text-right">Échéance</th></tr>
             </thead>
             <tbody>
               ${(expl.emprunts || []).map(e => `
@@ -246,8 +248,8 @@ export async function render(container) {
 
     <!-- ITK PAR CULTURE -->
     <div class="card fade-in">
-      <div class="card-header">Itineraires techniques par culture (ITK)</div>
-      <p style="font-size: 12px; color: var(--gray-400); margin-bottom: 12px;">Depliez chaque culture pour voir le detail des charges operationnelles : semences, engrais, phytos.</p>
+      <div class="card-header">Itinéraires techniques par culture (ITK)</div>
+      <p style="font-size: 12px; color: var(--gray-400); margin-bottom: 12px;">Dépliez chaque culture pour voir le détail des charges opérationnelles : semences, engrais, phytos.</p>
       ${assolement.map((c, i) => {
         const itkData = regionITK[c.culture];
         const label = CULTURE_LABELS[c.culture] || c.culture;
@@ -263,12 +265,12 @@ export async function render(container) {
                 <span style="color:var(--gray-400);font-weight:400;font-size:12px;">${c.surface} ha &middot; ${rdt} q/ha</span>
               </div>
               <div style="display:flex;align-items:center;gap:12px;">
-                ${totalOpe !== '-' ? `<span style="font-size:12px;color:var(--accent-600);font-weight:600;">${fmt.format(totalOpe)} EUR/ha charges ope.</span>` : '<span style="font-size:12px;color:var(--gray-400);">ITK non detaille</span>'}
+                ${totalOpe !== '-' ? `<span style="font-size:12px;color:var(--accent-600);font-weight:600;">${fmt.format(totalOpe)} EUR/ha charges opé.</span>` : '<span style="font-size:12px;color:var(--gray-400);">ITK non détaillé</span>'}
                 <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
             </div>
             <div class="accordion-body">
-              ${itkData ? renderITKDetail(itkData, meca) : '<p style="color:var(--gray-400);font-size:13px;">Donnees ITK detaillees non disponibles pour cette culture dans cette region.</p>'}
+              ${itkData ? renderITKDetail(itkData, meca) : '<p style="color:var(--gray-400);font-size:13px;">Données ITK détaillées non disponibles pour cette culture dans cette région.</p>'}
             </div>
           </div>
         `;
@@ -327,7 +329,7 @@ function renderITKDetail(itk, meca) {
   html += '<h4 style="font-weight:700;color:var(--gray-700);margin-bottom:6px;font-size:13px;">Semences</h4>';
   if (itk.semences) {
     const s = itk.semences;
-    html += `<div style="color:var(--gray-500);">${s.variete || 'Variete standard'}`;
+    html += `<div style="color:var(--gray-500);">${s.variete || 'Variété standard'}`;
     if (s.dose_kg_ha && s.prix_kg) {
       html += ` &middot; ${s.dose_kg_ha} kg/ha x ${s.prix_kg} EUR/kg`;
     }
@@ -368,10 +370,10 @@ function renderITKDetail(itk, meca) {
   }
   html += '</div>';
 
-  // Mecanisation
+  // Mécanisation
   html += '<div>';
-  html += '<h4 style="font-weight:700;color:var(--gray-700);margin-bottom:6px;font-size:13px;">Mecanisation</h4>';
-  html += `<div style="font-weight:700;color:var(--gray-900);">${meca !== '-' ? fmt.format(meca) + ' EUR/ha' : 'Non renseigne'}</div>`;
+  html += '<h4 style="font-weight:700;color:var(--gray-700);margin-bottom:6px;font-size:13px;">Mécanisation</h4>';
+  html += `<div style="font-weight:700;color:var(--gray-900);">${meca !== '-' ? fmt.format(meca) + ' EUR/ha' : 'Non renseigné'}</div>`;
   html += '<div style="color:var(--gray-400);font-size:11px;margin-top:2px;">Amort. + fuel + entretien</div>';
   html += '</div>';
 
@@ -379,7 +381,7 @@ function renderITKDetail(itk, meca) {
 
   // Total
   html += `<div style="margin-top:12px;padding:10px 12px;background:var(--gray-50);border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
-    <span style="font-weight:600;color:var(--gray-700);">Total charges operationnelles</span>
+    <span style="font-weight:600;color:var(--gray-700);">Total charges opérationnelles</span>
     <span style="font-size:16px;font-weight:800;color:var(--accent-700);">${fmt.format(itk.charges_ope_total_ha || 0)} EUR/ha</span>
   </div>`;
 

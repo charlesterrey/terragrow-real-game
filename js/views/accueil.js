@@ -32,7 +32,7 @@ function getProgressionTarget(prog) {
 
 const REGION_LABELS = {
   beauce: 'Beauce', nord_picardie: 'Nord-Picardie',
-  bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhone-Alpes'
+  bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhône-Alpes'
 };
 const REGION_COLORS = {
   beauce: { bg: '#DBEAFE', text: '#1D4ED8' },

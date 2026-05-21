@@ -100,7 +100,7 @@ export async function render(container) {
       <div class="card-header">Ratios clés</div>
       <div class="kpi-grid">
         ${ratioKPI('EBE/Produit brut', sig.produitBrut > 0 ? Math.round(sig.ebe / sig.produitBrut * 100) + '%' : '-', sig.produitBrut > 0 && sig.ebe / sig.produitBrut > 0.3 ? 'ok' : 'attention', 'Objectif > 30%')}
-        ${ratioKPI('Annuites/EBE', sig.ebe > 0 ? Math.round((expl.annuites_total || 0) / sig.ebe * 100) + '%' : 'N/A', sig.ebe > 0 && (expl.annuites_total || 0) / sig.ebe < 0.5 ? 'ok' : 'critique', 'Alerte si > 50%')}
+        ${ratioKPI('Annuités/EBE', sig.ebe > 0 ? Math.round((expl.annuites_total || 0) / sig.ebe * 100) + '%' : 'N/A', sig.ebe > 0 && (expl.annuites_total || 0) / sig.ebe < 0.5 ? 'ok' : 'critique', 'Alerte si > 50%')}
         ${ratioKPI('Ch. ope/ha', Math.round(sig.chargesOpe / expl.sau_totale) + ' EUR/ha', '', '')}
         ${ratioKPI('EBE/ha', Math.round(sig.ebe / expl.sau_totale) + ' EUR/ha', sig.ebe / expl.sau_totale > 300 ? 'ok' : 'attention', '')}
       </div>

@@ -3,13 +3,13 @@ import { chargerScenarios, getEtat, sauvegarderEtat } from '../app.js';
 import { getScenariosCustom, sauvegarderScenarioCustom, supprimerScenarioCustom } from '../state.js';
 
 const CATEGORIES = [
-  { id: 'geopolitique', label: 'Geopolitique', color: '#DC2626', bg: '#FEF2F2' },
+  { id: 'geopolitique', label: 'Géopolitique', color: '#DC2626', bg: '#FEF2F2' },
   { id: 'climatique', label: 'Climatique', color: '#F59E0B', bg: '#FFFBEB' },
-  { id: 'marche', label: 'Marche', color: '#7C3AED', bg: '#F5F3FF' },
+  { id: 'marche', label: 'Marché', color: '#7C3AED', bg: '#F5F3FF' },
   { id: 'sanitaire', label: 'Sanitaire', color: '#059669', bg: '#F0FDF4' },
-  { id: 'reglementaire', label: 'Reglementaire', color: '#0891B2', bg: '#ECFEFF' },
+  { id: 'reglementaire', label: 'Réglementaire', color: '#0891B2', bg: '#ECFEFF' },
   { id: 'composite', label: 'Composite', color: '#92400E', bg: '#FFFBEB' },
-  { id: 'custom', label: 'Personnalise', color: '#6B7280', bg: '#F9FAFB' }
+  { id: 'custom', label: 'Personnalisé', color: '#6B7280', bg: '#F9FAFB' }
 ];
 
 // SVG icon system — lean line icons by category
@@ -32,15 +32,15 @@ function getScenarioIcon(scenario) {
 
 const SLIDER_CONFIGS = {
   step2: [
-    { key: 'prix_engrais_n', label: 'Prix engrais azotes', min: 0.5, max: 2.5, default: 1.0, step: 0.05, unit: 'x' },
+    { key: 'prix_engrais_n', label: 'Prix engrais azotés', min: 0.5, max: 2.5, default: 1.0, step: 0.05, unit: 'x' },
     { key: 'prix_gnr', label: 'Prix GNR', min: 0.5, max: 2.0, default: 1.0, step: 0.05, unit: 'x' },
     { key: 'prix_phytos', label: 'Prix phytosanitaires', min: 0.7, max: 1.5, default: 1.0, step: 0.05, unit: 'x' },
     { key: 'prix_semences', label: 'Prix semences', min: 0.8, max: 1.3, default: 1.0, step: 0.05, unit: 'x' }
   ],
   step3_prix: [
-    { key: 'pv_ble_tendre', label: 'Prix ble tendre', min: 0.5, max: 1.5, default: 1.0, step: 0.05, unit: 'x' },
+    { key: 'pv_ble_tendre', label: 'Prix blé tendre', min: 0.5, max: 1.5, default: 1.0, step: 0.05, unit: 'x' },
     { key: 'pv_colza', label: 'Prix colza', min: 0.5, max: 1.5, default: 1.0, step: 0.05, unit: 'x' },
-    { key: 'pv_mais_grain', label: 'Prix mais grain', min: 0.5, max: 1.5, default: 1.0, step: 0.05, unit: 'x' }
+    { key: 'pv_mais_grain', label: 'Prix maïs grain', min: 0.5, max: 1.5, default: 1.0, step: 0.05, unit: 'x' }
   ],
   step3_rdt: [
     { key: 'rdt_global', label: 'Rendements (global)', min: 0.4, max: 1.2, default: 1.0, step: 0.05, unit: 'x' }
@@ -94,7 +94,7 @@ function buildScenarioFromWizard() {
   const w = wizardState;
   return {
     id: 'custom_' + Date.now(),
-    nom: w.nom || 'Scenario sans nom',
+    nom: w.nom || 'Scénario sans nom',
     categorie: w.categorie,
     couleur: getCategoryInfo(w.categorie).color,
     description: w.description || '',
@@ -228,16 +228,16 @@ function buildPage(predefined, activeId) {
 
     <div class="sc-page">
       <div style="margin-bottom: 24px;">
-        <h1 class="sc-section-title">Scenarios</h1>
-        <p class="sc-section-sub">Gerez vos scenarios de crise : selectionnez un scenario existant ou creez le votre.</p>
+        <h1 class="sc-section-title">Scénarios</h1>
+        <p class="sc-section-sub">Gérez vos scénarios de crise : sélectionnez un scénario existant ou créez le vôtre.</p>
       </div>
 
       ${getEtat().scenarioActif ? buildActiveBanner(allScenarios) : ''}
 
       <div style="margin-bottom: 32px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800);">Scenarios predefinies</h2>
-          <span style="font-size: 12px; color: var(--gray-400);">${predefined.length} scenarios</span>
+          <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800);">Scénarios prédéfinis</h2>
+          <span style="font-size: 12px; color: var(--gray-400);">${predefined.length} scénarios</span>
         </div>
         <div class="sc-grid" id="sc-predefined-grid">
           ${predefined.map(s => renderCard(s, false, activeId)).join('')}
@@ -246,8 +246,8 @@ function buildPage(predefined, activeId) {
 
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800);">Mes scenarios personnalises</h2>
-          <span style="font-size: 12px; color: var(--gray-400);">${custom.length} scenario(s)</span>
+          <h2 style="font-size: 15px; font-weight: 700; color: var(--gray-800);">Mes scénarios personnalisés</h2>
+          <span style="font-size: 12px; color: var(--gray-400);">${custom.length} scénario(s)</span>
         </div>
         <div class="sc-grid" id="sc-custom-grid">
           ${custom.map(s => renderCard(s, true, activeId)).join('')}
@@ -255,8 +255,8 @@ function buildPage(predefined, activeId) {
             <div class="sc-create-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-400)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </div>
-            <div class="sc-create-text">Creer un scenario</div>
-            <div style="font-size: 12px; color: var(--gray-400);">Personnalisez vos propres parametres</div>
+            <div class="sc-create-text">Créer un scénario</div>
+            <div style="font-size: 12px; color: var(--gray-400);">Personnalisez vos propres paramètres</div>
           </div>
         </div>
       </div>
@@ -275,10 +275,10 @@ function buildActiveBanner(allScenarios) {
     <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:${cat.bg};border:1px solid ${cat.color}22;border-radius:10px;margin-bottom:24px;">
       <span style="color:${cat.color};">${getScenarioIcon(sc)}</span>
       <div style="flex:1;">
-        <div style="font-size:13px;font-weight:700;color:${cat.color};">Scenario actif</div>
+        <div style="font-size:13px;font-weight:700;color:${cat.color};">Scénario actif</div>
         <div style="font-size:14px;font-weight:600;color:var(--gray-900);">${sc.nom}</div>
       </div>
-      <button id="sc-deactivate-btn" style="padding:6px 14px;border:1px solid ${cat.color}33;border-radius:6px;background:white;color:${cat.color};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Desactiver</button>
+      <button id="sc-deactivate-btn" style="padding:6px 14px;border:1px solid ${cat.color}33;border-radius:6px;background:white;color:${cat.color};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Désactiver</button>
     </div>
   `;
 }
@@ -310,8 +310,8 @@ function renderCard(s, isCustom, activeId) {
           <div style="display:flex;gap:4px;margin-top:4px;">
             <span class="sc-badge" style="background:${cat.bg};color:${cat.color};">${cat.label}</span>
             ${isCustom
-              ? '<span class="sc-badge sc-badge-custom">Personnalise</span>'
-              : '<span class="sc-badge sc-badge-predef">Predefini</span>'
+              ? '<span class="sc-badge sc-badge-custom">Personnalisé</span>'
+              : '<span class="sc-badge sc-badge-predef">Prédéfini</span>'
             }
           </div>
         </div>
@@ -358,7 +358,7 @@ function bindEvents(container, predefined) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.dataset.deleteId;
-      if (confirm('Supprimer ce scenario personnalise ?')) {
+      if (confirm('Supprimer ce scénario personnalisé ?')) {
         supprimerScenarioCustom(id);
         render(container);
       }
@@ -393,7 +393,7 @@ function renderWizard(pageContainer, predefined) {
     <div class="wiz-overlay" id="wiz-overlay">
       <div class="wiz-modal">
         <div class="wiz-header">
-          <h2>Creer un scenario</h2>
+          <h2>Créer un scénario</h2>
           <button class="wiz-close" id="wiz-close-btn">&times;</button>
         </div>
         <div class="wiz-steps">
@@ -404,7 +404,7 @@ function renderWizard(pageContainer, predefined) {
         </div>
         <div class="wiz-footer">
           <div>
-            ${currentStep > 1 ? '<button class="wiz-btn wiz-btn-secondary" id="wiz-prev">Precedent</button>' : '<span></span>'}
+            ${currentStep > 1 ? '<button class="wiz-btn wiz-btn-secondary" id="wiz-prev">Précédent</button>' : '<span></span>'}
           </div>
           <div>
             ${currentStep < 4
@@ -469,18 +469,18 @@ function renderWizardStep() {
 function renderStep1() {
   const w = wizardState;
   return `
-    <div class="wiz-step-label">Etape 1/4 &mdash; Identite du scenario</div>
+    <div class="wiz-step-label">Étape 1/4 &mdash; Identité du scénario</div>
     <div class="wiz-field">
-      <label>Nom du scenario *</label>
-      <input type="text" id="wiz-nom" value="${escHtml(w.nom)}" placeholder="Ex: Crise energetique 2025" maxlength="60" />
+      <label>Nom du scénario *</label>
+      <input type="text" id="wiz-nom" value="${escHtml(w.nom)}" placeholder="Ex: Crise énergétique 2025" maxlength="60" />
     </div>
     <div class="wiz-field">
       <label>Description</label>
-      <textarea id="wiz-desc" placeholder="Decrivez le contexte et les hypotheses..." maxlength="200">${escHtml(w.description)}</textarea>
+      <textarea id="wiz-desc" placeholder="Décrivez le contexte et les hypothèses..." maxlength="200">${escHtml(w.description)}</textarea>
     </div>
     <div class="wiz-field">
-      <label>Categorie</label>
-      <p style="font-size:11px;color:var(--gray-400);margin-bottom:8px;">L'icone s'adapte automatiquement a la categorie choisie.</p>
+      <label>Catégorie</label>
+      <p style="font-size:11px;color:var(--gray-400);margin-bottom:8px;">L'icône s'adapte automatiquement à la catégorie choisie.</p>
       <div class="wiz-cat-grid">
         ${CATEGORIES.map(c => `
           <button class="wiz-cat-btn ${w.categorie === c.id ? 'selected' : ''}" data-cat="${c.id}" style="${w.categorie === c.id ? `border-color:${c.color};background:${c.bg};color:${c.color};` : ''}">
@@ -495,7 +495,7 @@ function renderStep1() {
 
 function renderStep2() {
   return `
-    <div class="wiz-step-label">Etape 2/4 &mdash; Prix des intrants</div>
+    <div class="wiz-step-label">Étape 2/4 &mdash; Prix des intrants</div>
     <p style="font-size:12px;color:var(--gray-500);margin-bottom:16px;">Ajustez les multiplicateurs de prix. 1.0 = pas de changement.</p>
     ${SLIDER_CONFIGS.step2.map(s => renderSlider(s)).join('')}
   `;
@@ -503,7 +503,7 @@ function renderStep2() {
 
 function renderStep3() {
   return `
-    <div class="wiz-step-label">Etape 3/4 &mdash; Prix de vente & Rendements</div>
+    <div class="wiz-step-label">Étape 3/4 &mdash; Prix de vente & Rendements</div>
     <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">Prix de vente des principales cultures :</p>
     ${SLIDER_CONFIGS.step3_prix.map(s => renderSlider(s)).join('')}
     <div style="height:16px;"></div>
@@ -539,12 +539,12 @@ function renderStep4() {
   ];
 
   return `
-    <div class="wiz-step-label">Etape 4/4 &mdash; Apercu & Sauvegarde</div>
+    <div class="wiz-step-label">Étape 4/4 &mdash; Aperçu & Sauvegarde</div>
     <div class="wiz-preview-card">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         <div style="width:44px;height:44px;border-radius:10px;background:${cat.bg};display:flex;align-items:center;justify-content:center;color:${cat.color};">${SCENARIO_ICONS[w.categorie] || SCENARIO_ICONS.default}</div>
         <div>
-          <div style="font-size:16px;font-weight:700;color:var(--gray-900);">${escHtml(w.nom) || 'Scenario sans nom'}</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gray-900);">${escHtml(w.nom) || 'Scénario sans nom'}</div>
           <span class="sc-badge" style="background:${cat.bg};color:${cat.color};">${cat.label}</span>
         </div>
       </div>
@@ -569,7 +569,7 @@ function validateWizardStep() {
     collectWizardData();
     if (!wizardState.nom.trim()) {
       const errEl = document.getElementById('wiz-step1-error');
-      if (errEl) { errEl.textContent = 'Veuillez saisir un nom pour le scenario.'; errEl.style.display = 'block'; }
+      if (errEl) { errEl.textContent = 'Veuillez saisir un nom pour le scénario.'; errEl.style.display = 'block'; }
       return false;
     }
   }

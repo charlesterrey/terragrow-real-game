@@ -127,7 +127,7 @@ export async function render(container) {
       ${rpKpi('EBE', fm(sig.ebe), sig.ebe > 0 ? 'var(--green-700)' : 'var(--red-500)')}
       ${rpKpi('RCAI', fm(sig.rcai), sig.rcai >= 0 ? 'var(--green-700)' : 'var(--red-500)')}
       ${rpKpi('Résilience', rl.score + '/100', rl.couleur)}
-      ${rpKpi('Annuites/EBE', Math.round(ratios?.annuitesEbe || 0) + '%', (ratios?.annuitesEbe || 0) > 50 ? 'var(--red-500)' : 'var(--green-700)')}
+      ${rpKpi('Annuités/EBE', Math.round(ratios?.annuitesEbe || 0) + '%', (ratios?.annuitesEbe || 0) > 50 ? 'var(--red-500)' : 'var(--green-700)')}
     </div>
   </div>`;
 
@@ -192,13 +192,13 @@ export async function render(container) {
     </tr>`).join('')}
     </tbody></table>
     <div style="margin-top:16px;padding:12px;background:var(--gray-50);border-radius:6px;font-size:0.85rem;">
-      <strong>Lecture :</strong> Le CdP/t inclut charges operationnelles + mecanisation + charges de structure reparties + remuneration MO, hors aides PAC.
-      Les cultures dont la marge/t est negative sont deficitaires au prix de marche actuel.
+      <strong>Lecture :</strong> Le CdP/t inclut charges opérationnelles + mécanisation + charges de structure réparties + rémunération MO, hors aides PAC.
+      Les cultures dont la marge/t est négative sont déficitaires au prix de marché actuel.
     </div>
-    <div class="rapport-sub-header" style="margin-top:16px;">Synthese produit brut et charges</div>
+    <div class="rapport-sub-header" style="margin-top:16px;">Synthèse produit brut et charges</div>
     <table class="rapport-table">
       <tr><td>Produit brut total</td><td class="text-right font-bold">${fm(resume.totalProduitBrut)}</td></tr>
-      <tr><td>Charges operationnelles totales</td><td class="text-right">${fm(resume.totalChargesOpe)}</td></tr>
+      <tr><td>Charges opérationnelles totales</td><td class="text-right">${fm(resume.totalChargesOpe)}</td></tr>
       <tr><td>Charges de structure (hors amort. & frais fi.)</td><td class="text-right">${fm(expl.charges_structure_total - am - ff)}</td></tr>
       <tr><td>Amortissements</td><td class="text-right">${fm(am)}</td></tr>
       <tr><td>Frais financiers</td><td class="text-right">${fm(ff)}</td></tr>
@@ -208,17 +208,17 @@ export async function render(container) {
 
   // ===================== PAGE 5: TRESORERIE =====================
   html += `<div class="rapport-page page-break">
-    <div class="rapport-section-header">4. Plan de tresorerie mensuel</div>
+    <div class="rapport-section-header">4. Plan de trésorerie mensuel</div>
     <table class="rapport-table" style="font-size:0.75rem;"><thead><tr><th></th>${pt.map(m => `<th class="text-center" style="min-width:55px;">${m.label}</th>`).join('')}</tr></thead><tbody>
     <tr><td style="font-weight:600;">Encaissements</td>${pt.map(m => `<td class="text-right">${Math.round(m.encaissements.total / 1000)}k</td>`).join('')}</tr>
-    <tr><td style="font-weight:600;">Decaissements</td>${pt.map(m => `<td class="text-right">${Math.round(m.decaissements.total / 1000)}k</td>`).join('')}</tr>
+    <tr><td style="font-weight:600;">Décaissements</td>${pt.map(m => `<td class="text-right">${Math.round(m.decaissements.total / 1000)}k</td>`).join('')}</tr>
     <tr style="border-top:2px solid var(--gray-300);"><td style="font-weight:600;">Solde mensuel</td>${pt.map(m => `<td class="text-right ${m.solde_mensuel < 0 ? 'text-danger' : ''}">${Math.round(m.solde_mensuel / 1000)}k</td>`).join('')}</tr>
     <tr style="background:var(--gray-50);font-weight:700;"><td>Cumul</td>${pt.map(m => `<td class="text-right ${m.tresorerie_cumulee < 0 ? 'text-danger' : ''}">${Math.round(m.tresorerie_cumulee / 1000)}k</td>`).join('')}</tr>
     </tbody></table>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
       ${rpKpi('BFR max', fm(it.bfr), Math.abs(it.bfr) > 50000 ? 'var(--red-500)' : 'var(--gray-800)')}
       ${rpKpi('Mois critique', it.moisCritique || '-', 'var(--gray-800)')}
-      ${rpKpi('Tresorerie min', fm(it.tresorerieMin), (it.tresorerieMin || 0) < 0 ? 'var(--red-500)' : 'var(--green-700)')}
+      ${rpKpi('Trésorerie min', fm(it.tresorerieMin), (it.tresorerieMin || 0) < 0 ? 'var(--red-500)' : 'var(--green-700)')}
     </div>
     ${diag && diag.previsionTresorerie ? `<div style="margin-top:16px;padding:12px;background:var(--gray-50);border-radius:6px;font-size:0.85rem;">${diag.previsionTresorerie.commentaire}</div>` : ''}
   </div>`;
@@ -229,17 +229,17 @@ export async function render(container) {
     html += `<div class="rapport-page page-break">
       <div class="rapport-section-header">5. Simulation de crise</div>
       <div style="padding:12px;background:rgba(239,68,68,0.05);border-left:4px solid var(--red-500);border-radius:4px;margin-bottom:16px;">
-        <strong>Scenario applique :</strong> ${state.scenarioActif}
+        <strong>Scénario appliqué :</strong> ${state.scenarioActif}
       </div>
       <div class="rapport-sub-header">Impact sur les indicateurs</div>
       <table class="rapport-table"><thead><tr><th>Indicateur</th><th class="text-right">Avant</th><th class="text-right">Apres</th><th class="text-right">Variation</th></tr></thead><tbody>`;
     const simRows = [
       ['EBE', sd.ebe], ['RCAI', sd.rcai], ['Marge brute', sd.margeBrute],
-      ['Tresorerie min', sd.tresorerieMin], ['Resilience', sd.resilience]
+      ['Trésorerie min', sd.tresorerieMin], ['Résilience', sd.resilience]
     ];
     for (const [label, d] of simRows) {
       if (!d) continue;
-      const isRes = label === 'Resilience';
+      const isRes = label === 'Résilience';
       const fmtV = isRes ? v => (v || 0) + '/100' : v => fm(v);
       const delta = isRes ? ((d.delta || 0) + ' pts') : fm(d.delta || 0);
       const cls = (d.delta || 0) >= 0 ? '' : 'text-danger';
@@ -248,8 +248,8 @@ export async function render(container) {
     html += `</tbody></table>`;
     // CdP variation if available
     if (simRes.cdpApres && simRes.cdpApres.length) {
-      html += `<div class="rapport-sub-header" style="margin-top:16px;">Variation des couts de production</div>
-      <table class="rapport-table"><thead><tr><th>Culture</th><th class="text-right">CdP/t avant</th><th class="text-right">CdP/t apres</th><th class="text-right">Variation</th></tr></thead><tbody>`;
+      html += `<div class="rapport-sub-header" style="margin-top:16px;">Variation des coûts de production</div>
+      <table class="rapport-table"><thead><tr><th>Culture</th><th class="text-right">CdP/t avant</th><th class="text-right">CdP/t après</th><th class="text-right">Variation</th></tr></thead><tbody>`;
       for (const ca of simRes.cdpApres) {
         const cb = cdp.find(c => c.culture === ca.culture);
         if (!cb) continue;
@@ -271,8 +271,8 @@ export async function render(container) {
   }
   // Levers applied
   if (conseilRes && conseilRes.leviersAppliques && conseilRes.leviersAppliques.length) {
-    html += `<div class="rapport-sub-header" style="margin-top:16px;">Leviers appliques</div>
-    <table class="rapport-table"><thead><tr><th>Levier</th><th>Categorie</th><th>Description</th></tr></thead><tbody>
+    html += `<div class="rapport-sub-header" style="margin-top:16px;">Leviers appliqués</div>
+    <table class="rapport-table"><thead><tr><th>Levier</th><th>Catégorie</th><th>Description</th></tr></thead><tbody>
     ${conseilRes.leviersAppliques.map(l => `<tr><td style="font-weight:600;">${l.nom}</td><td style="font-size:0.8rem;">${l.categorie || ''}</td><td style="font-size:0.8rem;">${l.description || ''}</td></tr>`).join('')}
     </tbody></table>`;
   }
@@ -285,11 +285,11 @@ export async function render(container) {
   if (conseilRes && conseilRes.delta) {
     const cd = conseilRes.delta;
     html += `<div class="rapport-sub-header" style="margin-top:16px;">Impact des recommandations</div>
-    <table class="rapport-table"><thead><tr><th>Indicateur</th><th class="text-right">Avant</th><th class="text-right">Apres conseil</th><th class="text-right">Variation</th></tr></thead><tbody>`;
-    const cRows = [['EBE', cd.ebe], ['RCAI', cd.rcai], ['Resilience', cd.resilience]];
+    <table class="rapport-table"><thead><tr><th>Indicateur</th><th class="text-right">Avant</th><th class="text-right">Après conseil</th><th class="text-right">Variation</th></tr></thead><tbody>`;
+    const cRows = [['EBE', cd.ebe], ['RCAI', cd.rcai], ['Résilience', cd.resilience]];
     for (const [label, d] of cRows) {
       if (!d) continue;
-      const isRes = label === 'Resilience';
+      const isRes = label === 'Résilience';
       const fmtV = isRes ? v => (v || 0) + '/100' : v => fm(v);
       const delta = isRes ? ((d.delta || 0) + ' pts') : fm(d.delta || 0);
       const cls = (d.delta || 0) >= 0 ? 'text-success' : 'text-danger';
@@ -299,8 +299,8 @@ export async function render(container) {
   }
   // Assolement modified
   if (state.assolementModifie) {
-    html += `<div class="rapport-sub-header" style="margin-top:16px;">Assolement modifie</div>
-    <table class="rapport-table"><thead><tr><th>Culture</th><th class="text-right">Avant (ha)</th><th class="text-right">Apres (ha)</th><th class="text-right">Variation</th></tr></thead><tbody>`;
+    html += `<div class="rapport-sub-header" style="margin-top:16px;">Assolement modifié</div>
+    <table class="rapport-table"><thead><tr><th>Culture</th><th class="text-right">Avant (ha)</th><th class="text-right">Après (ha)</th><th class="text-right">Variation</th></tr></thead><tbody>`;
     for (const ca of state.assolementModifie) {
       const cb = assol.find(c => c.culture === ca.culture);
       const avant = cb ? cb.surface : 0;
@@ -326,7 +326,7 @@ export async function render(container) {
     </div>
     <div style="font-size:2rem;color:var(--gray-300);">&#8594;</div>
     <div style="text-align:center;">
-      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray-500);margin-bottom:4px;">Apres conseil</div>
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray-500);margin-bottom:4px;">Après conseil</div>
       <div style="font-size:3rem;font-weight:900;color:${resilApres >= 60 ? 'var(--green-700)' : resilApres >= 40 ? 'var(--amber-500)' : 'var(--red-500)'};">${resilApres}</div>
       <div style="font-size:0.85rem;color:var(--gray-500);">/100</div>
     </div>
@@ -345,22 +345,22 @@ export async function render(container) {
   }
   // Risks summary
   if (diag && diag.risques && diag.risques.length) {
-    html += `<div class="rapport-sub-header" style="margin-top:16px;">Risques identifies</div>
+    html += `<div class="rapport-sub-header" style="margin-top:16px;">Risques identifiés</div>
     <table class="rapport-table"><thead><tr><th>Risque</th><th>Probabilite</th><th>Impact</th></tr></thead><tbody>
     ${diag.risques.map(r => `<tr><td>${r.titre}</td><td>${r.probabilite || ''}</td><td>${r.impact || ''}</td></tr>`).join('')}
     </tbody></table>`;
   }
   // Sensitivity
   if (diag && diag.sensibilite) {
-    html += `<div class="rapport-sub-header" style="margin-top:16px;">Analyse de sensibilite</div>
-    <table class="rapport-table"><thead><tr><th>Scenario</th><th class="text-right">Perte CA</th><th class="text-right">EBE apres</th><th>Verdict</th></tr></thead><tbody>`;
+    html += `<div class="rapport-sub-header" style="margin-top:16px;">Analyse de sensibilité</div>
+    <table class="rapport-table"><thead><tr><th>Scénario</th><th class="text-right">Perte CA</th><th class="text-right">EBE après</th><th>Verdict</th></tr></thead><tbody>`;
     for (const [k, s] of Object.entries(diag.sensibilite)) {
       html += `<tr><td>${s.label}</td><td class="text-right text-danger">${fm(s.perteCA)}</td><td class="text-right ${s.ebeApres < 0 ? 'text-danger' : ''}">${fm(s.ebeApres)}</td><td style="font-size:0.8rem;">${s.verdict}</td></tr>`;
     }
     html += `</tbody></table>`;
   }
   html += `<div style="margin-top:32px;text-align:center;font-size:0.8rem;color:var(--gray-400);border-top:1px solid var(--gray-200);padding-top:12px;">
-    TERRAGROW BUSINESS GAME — Dossier genere le ${date}
+    TERRAGROW BUSINESS GAME — Dossier généré le ${date}
   </div></div>`;
 
   container.innerHTML = html;
@@ -369,7 +369,7 @@ export async function render(container) {
   document.getElementById('btn-print')?.addEventListener('click', () => {
     // Prompt for team name if not set
     if (!state.nomEquipe && !state.nomEtudiant) {
-      const n = prompt('Nom de votre equipe / binome :');
+      const n = prompt('Nom de votre équipe / binôme :');
       if (n) {
         sauvegarderEtat({ nomEtudiant: n });
         // Update the cover page name

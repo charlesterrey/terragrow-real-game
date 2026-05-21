@@ -6,7 +6,7 @@ import { getProgression, getProgressionGlobale } from '../state.js';
 
 const REGION_LABELS = {
   beauce: 'Beauce', nord_picardie: 'Nord-Picardie',
-  bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhone-Alpes'
+  bretagne: 'Bretagne', sud_ouest: 'Sud-Ouest', rhone_alpes: 'Rhône-Alpes'
 };
 const REGION_COLORS = {
   beauce: { bg: '#DBEAFE', text: '#1D4ED8' },
@@ -99,7 +99,7 @@ export async function render(container) {
         <div class="cd-stat-accent" style="background: linear-gradient(180deg, #22C55E, #4ADE80);"></div>
         <div class="cd-stat-body">
           <div class="cd-stat-value" style="color: #15803D;">${advised}</div>
-          <div class="cd-stat-label">Dossier${advised > 1 ? 's' : ''} genere${advised > 1 ? 's' : ''}</div>
+          <div class="cd-stat-label">Dossier${advised > 1 ? 's' : ''} généré${advised > 1 ? 's' : ''}</div>
         </div>
       </div>
       <div class="cd-stat-card">
@@ -113,7 +113,7 @@ export async function render(container) {
         <div class="cd-stat-accent" style="background: var(--gray-200);"></div>
         <div class="cd-stat-body">
           <div class="cd-stat-value" style="color: var(--gray-400);">${notStarted}</div>
-          <div class="cd-stat-label">Non commencee${notStarted > 1 ? 's' : ''}</div>
+          <div class="cd-stat-label">Non commencée${notStarted > 1 ? 's' : ''}</div>
         </div>
       </div>
       <div class="cd-stat-card">
@@ -134,7 +134,7 @@ export async function render(container) {
         <div style="margin-top: 12px; font-size: 12px; color: var(--gray-500); text-align: center;">
           <div style="display: flex; align-items: center; gap: 6px; justify-content: center; margin-bottom: 4px;">
             <span style="width: 10px; height: 10px; border-radius: 50%; background: #22C55E; display: inline-block;"></span>
-            Termine (${advised})
+            Terminé (${advised})
           </div>
           <div style="display: flex; align-items: center; gap: 6px; justify-content: center; margin-bottom: 4px;">
             <span style="width: 10px; height: 10px; border-radius: 50%; background: #3B82F6; display: inline-block;"></span>
@@ -142,7 +142,7 @@ export async function render(container) {
           </div>
           <div style="display: flex; align-items: center; gap: 6px; justify-content: center;">
             <span style="width: 10px; height: 10px; border-radius: 50%; background: #D1D5DB; display: inline-block;"></span>
-            Non commence (${notStarted})
+            Non commencé (${notStarted})
           </div>
         </div>
       </div>
@@ -153,7 +153,7 @@ export async function render(container) {
             <tr>
               <th class="cd-th">Exploitation</th>
               <th class="cd-th">Region</th>
-              <th class="cd-th">Etape</th>
+              <th class="cd-th">Étape</th>
               <th class="cd-th">Statut conseil</th>
               <th class="cd-th cd-th-right">EBE</th>
               <th class="cd-th cd-th-right">RCAI</th>
@@ -177,21 +177,21 @@ export async function render(container) {
 function getConseilStatus(exploitationId, prog, state) {
   // Check if this exploitation has a completed conseil dossier
   if (prog.complete) {
-    return { key: 'dossier_genere', label: 'Dossier genere', cssClass: 'cd-badge-done' };
+    return { key: 'dossier_genere', label: 'Dossier généré', cssClass: 'cd-badge-done' };
   }
   // Check if the current exploitation has leviers selected
   if (state.exploitationId === exploitationId && state.leviersSelectionnes && state.leviersSelectionnes.length > 0) {
-    return { key: 'leviers_selectionnes', label: 'Leviers selectionnes', cssClass: 'cd-badge-leviers' };
+    return { key: 'leviers_selectionnes', label: 'Leviers sélectionnés', cssClass: 'cd-badge-leviers' };
   }
   // Check if conseil step (6) has been reached
   if (prog.etape >= 6) {
-    return { key: 'leviers_selectionnes', label: 'Leviers selectionnes', cssClass: 'cd-badge-leviers' };
+    return { key: 'leviers_selectionnes', label: 'Leviers sélectionnés', cssClass: 'cd-badge-leviers' };
   }
   // Check if they have progressed at all
   if (prog.etape > 0) {
-    return { key: 'en_cours', label: 'En cours (etape ' + prog.etape + '/6)', cssClass: 'cd-badge-encours' };
+    return { key: 'en_cours', label: 'En cours (étape ' + prog.etape + '/6)', cssClass: 'cd-badge-encours' };
   }
-  return { key: 'non_commence', label: 'Non commence', cssClass: 'cd-badge-new' };
+  return { key: 'non_commence', label: 'Non commencé', cssClass: 'cd-badge-new' };
 }
 
 // ─── Row rendering ───────────────────────────────────────────────────────────
@@ -205,7 +205,7 @@ function renderConseilRow(s) {
   const ebe = result?.sig?.ebe ?? 0;
   const rcai = result?.sig?.rcai ?? 0;
 
-  const stepLabel = prog.etape > 0 ? `Etape ${prog.etape}/6` : '-';
+  const stepLabel = prog.etape > 0 ? `Étape ${prog.etape}/6` : '-';
 
   // Determine action button
   let actionBtn;
@@ -246,7 +246,7 @@ function renderDonutChart(advised, inProgress, notStarted) {
   const chart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Termine', 'En cours', 'Non commence'],
+      labels: ['Terminé', 'En cours', 'Non commencé'],
       datasets: [{
         data: data,
         backgroundColor: [COLORS.sage, COLORS.steel, '#D1D5DB'],
