@@ -1,6 +1,6 @@
 import { chargerExploitation, chargerReferentiel, chargerITK, getEtat } from '../app.js';
-import { calculerCoutsProduction } from '../engine/couts-production.js?v=8';
-import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=8';
+import { calculerCoutsProduction } from '../engine/couts-production.js?v=9';
+import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=9';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression } from '../state.js';
 import { COLORS, fmtEur, fmtK as fmtKChart, applyFinancialDefaults, euroScale, categoryScale, euroTooltip, legendHidden, zeroLineGrid } from '../chart-config.js';
