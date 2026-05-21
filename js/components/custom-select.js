@@ -1,5 +1,4 @@
 // js/components/custom-select.js — Custom dropdown conforme au design system Marcassin
-// Remplace les <select> natifs par un dropdown stylable
 
 export function initCustomSelects(container = document) {
   container.querySelectorAll('select[data-custom]').forEach(select => {
@@ -12,11 +11,11 @@ export function initCustomSelects(container = document) {
 function createCustomSelect(originalSelect) {
   const wrapper = document.createElement('div');
   wrapper.className = 'cs-wrapper';
-  wrapper.style.position = 'relative';
-  wrapper.style.display = 'inline-block';
-  wrapper.style.width = originalSelect.style.width || '';
-  wrapper.style.minWidth = originalSelect.style.minWidth || '200px';
-  wrapper.style.flex = originalSelect.style.flex || '';
+
+  // Copy sizing from original select
+  const computedStyle = originalSelect.style;
+  if (computedStyle.minWidth) wrapper.style.minWidth = computedStyle.minWidth;
+  if (computedStyle.flex) wrapper.style.flex = computedStyle.flex;
 
   // Trigger button
   const trigger = document.createElement('button');
@@ -25,7 +24,7 @@ function createCustomSelect(originalSelect) {
   trigger.setAttribute('aria-haspopup', 'listbox');
   trigger.setAttribute('aria-expanded', 'false');
 
-  // Dropdown panel
+  // Dropdown panel — uses fixed positioning to avoid overflow issues
   const dropdown = document.createElement('div');
   dropdown.className = 'cs-dropdown';
   dropdown.setAttribute('role', 'listbox');
@@ -73,31 +72,32 @@ function createCustomSelect(originalSelect) {
       <span class="cs-trigger-text">${selected ? selected.textContent : 'Sélectionner...'}</span>
       <svg class="cs-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     `;
-    // Update selected state in dropdown
     dropdown.querySelectorAll('.cs-option').forEach(o => {
       o.classList.toggle('selected', o.dataset.value === originalSelect.value);
     });
   }
 
+  function positionDropdown() {
+    const rect = trigger.getBoundingClientRect();
+    dropdown.style.position = 'fixed';
+    dropdown.style.left = rect.left + 'px';
+    dropdown.style.width = rect.width + 'px';
+
+    const spaceBelow = window.innerHeight - rect.bottom;
+    if (spaceBelow < 260) {
+      dropdown.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+      dropdown.style.top = 'auto';
+    } else {
+      dropdown.style.top = (rect.bottom + 4) + 'px';
+      dropdown.style.bottom = 'auto';
+    }
+  }
+
   function open() {
+    positionDropdown();
     dropdown.classList.add('open');
     trigger.setAttribute('aria-expanded', 'true');
     trigger.classList.add('open');
-    // Position
-    const rect = wrapper.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    if (spaceBelow < 240) {
-      dropdown.style.bottom = '100%';
-      dropdown.style.top = 'auto';
-      dropdown.style.marginBottom = '4px';
-      dropdown.style.marginTop = '0';
-    } else {
-      dropdown.style.top = '100%';
-      dropdown.style.bottom = 'auto';
-      dropdown.style.marginTop = '4px';
-      dropdown.style.marginBottom = '0';
-    }
-    // Scroll to selected
     const sel = dropdown.querySelector('.cs-option.selected');
     if (sel) sel.scrollIntoView({ block: 'nearest' });
   }
@@ -110,35 +110,33 @@ function createCustomSelect(originalSelect) {
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (dropdown.classList.contains('open')) { close(); } else { open(); }
+    dropdown.classList.contains('open') ? close() : open();
   });
 
-  // Close on outside click
   document.addEventListener('click', (e) => {
-    if (!wrapper.contains(e.target)) close();
+    if (!wrapper.contains(e.target) && !dropdown.contains(e.target)) close();
   });
 
-  // Keyboard
+  window.addEventListener('scroll', () => { if (dropdown.classList.contains('open')) positionDropdown(); }, true);
+  window.addEventListener('resize', () => { if (dropdown.classList.contains('open')) close(); });
+
   trigger.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (dropdown.classList.contains('open')) close(); else open(); }
-    if (e.key === 'ArrowDown') { e.preventDefault(); open(); const first = dropdown.querySelector('.cs-option:not(.disabled)'); if (first) first.focus(); }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dropdown.classList.contains('open') ? close() : open(); }
   });
 
   // Hide original, insert custom
   originalSelect.style.display = 'none';
   originalSelect.parentNode.insertBefore(wrapper, originalSelect);
   wrapper.appendChild(trigger);
-  wrapper.appendChild(dropdown);
   wrapper.appendChild(originalSelect);
+  // Dropdown appended to body for fixed positioning
+  document.body.appendChild(dropdown);
 
   buildOptions();
   updateTrigger();
 
-  // Observe changes to original select
+  // Observe changes
   const observer = new MutationObserver(() => { buildOptions(); updateTrigger(); });
   observer.observe(originalSelect, { childList: true, subtree: true, attributes: true });
-
-  // Re-sync if value changes programmatically
-  originalSelect.addEventListener('_refresh', () => { buildOptions(); updateTrigger(); });
 }
