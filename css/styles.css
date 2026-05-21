@@ -753,6 +753,123 @@ select.select-lg {
   padding-right: 38px;
 }
 
+/* ================================================================
+   CUSTOM SELECT — Marcassin design system
+   Replaces native <select> when data-custom attribute is present
+   ================================================================ */
+
+.cs-wrapper { position: relative; display: inline-flex; }
+
+.cs-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #1F2937;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  text-align: left;
+  line-height: 1.4;
+}
+.cs-trigger:hover { border-color: #D1D5DB; }
+.cs-trigger.open,
+.cs-trigger:focus {
+  outline: none;
+  border-color: #021130;
+  box-shadow: 0 0 0 2px rgba(2,17,48,0.12);
+}
+
+.cs-trigger-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cs-chevron {
+  flex-shrink: 0;
+  color: #9CA3AF;
+  transition: transform 0.2s, color 0.15s;
+}
+.cs-trigger.open .cs-chevron { transform: rotate(180deg); color: #021130; }
+
+.cs-dropdown {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+  width: 100%;
+  min-width: 200px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  z-index: 500;
+  padding: 4px;
+}
+.cs-dropdown.open { display: block; }
+
+.cs-dropdown::-webkit-scrollbar { width: 6px; }
+.cs-dropdown::-webkit-scrollbar-track { background: transparent; }
+.cs-dropdown::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+
+.cs-option {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #374151;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cs-option:hover { background: #F3F4F6; }
+.cs-option.selected {
+  background: #E8EDF5;
+  color: #021130;
+  font-weight: 600;
+}
+.cs-option.selected::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #021130;
+  flex-shrink: 0;
+}
+.cs-option.disabled {
+  color: #9CA3AF;
+  cursor: default;
+}
+.cs-option.disabled:hover { background: transparent; }
+
+.cs-group-label {
+  padding: 6px 10px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+.cs-group-label:first-child { margin-top: 0; }
+
+/* Divider between groups */
+.cs-group-label + .cs-option { }
+.cs-group-label ~ .cs-group-label { border-top: 1px solid #F3F4F6; padding-top: 8px; margin-top: 4px; }
+
 /* ---- Checkbox / Radio ---- */
 input[type="checkbox"],
 input[type="radio"] {

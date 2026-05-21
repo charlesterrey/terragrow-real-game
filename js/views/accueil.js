@@ -2,6 +2,7 @@
 import { chargerToutesExploitations, chargerReferentiel, chargerITK, chargerScenarios, getEtat, sauvegarderEtat } from '../app.js';
 import { calculerSituationComplete, simulerScenario } from '../engine/simulation.js?v=7';
 import { getProgression, getProgressionGlobale, getScenariosCustom } from '../state.js';
+import { initCustomSelects } from '../components/custom-select.js';
 
 const STEPS = [
   { num: 1, label: 'Découverte', hash: 'decouverte' },
@@ -111,7 +112,7 @@ export async function render(container) {
       </div>
       <div style="display: flex; align-items: center; gap: 10px;">
         <label style="font-size: 12px; font-weight: 500; color: var(--gray-500);">Scénario :</label>
-        <select class="scenario-select" id="portfolio-scenario">
+        <select class="scenario-select" id="portfolio-scenario" data-custom>
           <option value="">Aucun (situation réelle)</option>
           ${scenarios.map(s => `<option value="${s.id}">${s.nom}</option>`).join('')}
           ${getScenariosCustom().length > 0 ? `<optgroup label="Mes scénarios">
@@ -154,6 +155,9 @@ export async function render(container) {
 
     ${renderScenariosSection()}
   `;
+
+  // Init custom selects
+  initCustomSelects(container);
 
   // Scenario change handler
   document.getElementById('portfolio-scenario').addEventListener('change', async (ev) => {

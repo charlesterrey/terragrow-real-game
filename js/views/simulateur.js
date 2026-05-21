@@ -3,6 +3,7 @@ import { chargerExploitation, chargerReferentiel, chargerITK, chargerScenarios, 
 import { simulerScenario, calculerSituationComplete } from '../engine/simulation.js?v=7';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression, getScenariosCustom, sauvegarderScenarioCustom, supprimerScenarioCustom } from '../state.js';
+import { initCustomSelects } from '../components/custom-select.js';
 import { COLORS, fmtEur, fmtK, applyFinancialDefaults, euroScale, categoryScale, legendTop, zeroLineGrid } from '../chart-config.js';
 
 let charts = [];
@@ -31,7 +32,7 @@ export async function render(container) {
     <div class="card">
       <div class="card-header">Sélection du scénario</div>
       <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-        <select id="scenario-select" style="flex: 1; min-width: 240px;">
+        <select id="scenario-select" style="flex: 1; min-width: 240px;" data-custom>
           <option value="">-- Choisir un scénario --</option>
           ${scenarios.map(s => `<option value="${s.id}" ${state.scenarioActif === s.id ? 'selected' : ''}>${s.nom}</option>`).join('')}
           ${renderCustomScenarioOptions(state)}
@@ -93,6 +94,9 @@ export async function render(container) {
   // Combine predefined + custom scenarios for lookup
   const customScenarios = getScenariosCustom();
   const allScenarios = [...scenarios, ...customScenarios];
+
+  // Init custom selects
+  initCustomSelects(container);
 
   // Scenario selection handler — auto-fills sliders from scenario multiplicateurs
   const selectEl = document.getElementById('scenario-select');

@@ -334,6 +334,12 @@ window.showOnboarding = function() {
 // --- Initialization ---
 
 async function init() {
+  // Apply professional Chart.js defaults globally
+  try {
+    const { applyFinancialDefaults } = await import('./chart-config.js');
+    applyFinancialDefaults();
+  } catch(e) { console.warn('Chart config not loaded:', e); }
+
   // Load state
   chargerEtat();
 
