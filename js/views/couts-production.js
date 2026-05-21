@@ -1,7 +1,7 @@
 // js/views/couts-production.js — Vue analyse coûts de production (refonte complète)
 import { chargerExploitation, chargerReferentiel, chargerITK, chargerScenarios, getEtat, sauvegarderEtat } from '../app.js';
-import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=7';
-import { simulerScenario } from '../engine/simulation.js?v=7';
+import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=8';
+import { simulerScenario } from '../engine/simulation.js?v=8';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { initCustomSelects } from '../components/custom-select.js';
 import { setProgression } from '../state.js';

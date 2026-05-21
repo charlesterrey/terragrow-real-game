@@ -1,9 +1,9 @@
 import { chargerExploitation, chargerReferentiel, chargerITK, getEtat, sauvegarderEtat } from '../app.js';
-import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=7';
-import { calculerSIGAgrege, calculerRatios } from '../engine/sig.js?v=7';
-import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=7';
-import { calculerResilience } from '../engine/resilience.js?v=7';
-import { genererDiagnostic } from '../engine/diagnostic.js?v=7';
+import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=8';
+import { calculerSIGAgrege, calculerRatios } from '../engine/sig.js?v=8';
+import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=8';
+import { calculerResilience } from '../engine/resilience.js?v=8';
+import { genererDiagnostic } from '../engine/diagnostic.js?v=8';
 
 export async function render(container) {
   const state = getEtat();

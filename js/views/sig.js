@@ -1,7 +1,7 @@
 // js/views/sig.js — Vue SIG + waterfall chart + comparaison 3 ans
 import { chargerExploitation, chargerReferentiel, chargerITK, getEtat } from '../app.js';
-import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=7';
-import { calculerSIGAgrege } from '../engine/sig.js?v=7';
+import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=8';
+import { calculerSIGAgrege } from '../engine/sig.js?v=8';
 import { COLORS, fmtEur, fmtK, applyFinancialDefaults, euroScale, categoryScale, euroTooltip, legendTop, legendHidden, gridStyle, zeroLineGrid } from '../chart-config.js';
 
 let charts = [];

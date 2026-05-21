@@ -2,10 +2,10 @@
 // Analyse les forces, faiblesses, ratios cles et risques pour aider
 // l'etudiant-conseiller a comprendre POURQUOI une exploitation est fragile.
 
-import { calculerCoutsProduction, calculerResumeCdP } from './couts-production.js?v=7';
-import { calculerSIGAgrege, calculerRatios } from './sig.js?v=7';
-import { calculerTresorerieEstimee, calculerIndicateursTreso } from './tresorerie.js?v=7';
-import { calculerResilience } from './resilience.js?v=7';
+import { calculerCoutsProduction, calculerResumeCdP } from './couts-production.js?v=8';
+import { calculerSIGAgrege, calculerRatios } from './sig.js?v=8';
+import { calculerTresorerieEstimee, calculerIndicateursTreso } from './tresorerie.js?v=8';
+import { calculerResilience } from './resilience.js?v=8';
 
 // ─── Seuils de reference (normes CER France / Chambres d'agriculture) ───
 const SEUILS = {
