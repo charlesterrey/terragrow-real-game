@@ -299,7 +299,7 @@ export async function render(container) {
         maintainAspectRatio: true,
         cutout: '55%',
         plugins: {
-          legend: { position: 'bottom', labels: { font: { family: 'inherit', size: 11 }, padding: 12, usePointStyle: true, pointStyle: 'circle' } },
+          legend: { position: 'right', labels: { font: { family: 'inherit', size: 11 }, padding: 8, usePointStyle: true, pointStyle: 'circle', boxWidth: 8 } },
           tooltip: {
             backgroundColor: '#1F2937',
             titleFont: { family: 'inherit', size: 12 },
