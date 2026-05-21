@@ -64,9 +64,11 @@ export function calculerCoutsProduction(exploitation, annee, referentiel, itk) {
     const seuil = cdpT - aidesT;
 
     const pvKey = { mais_grain_irrigue: 'mais_grain', soja_irrigue: 'soja', orge_printemps: 'orge_printemps_brass', betterave_sucriere: 'betterave_dt16', lin_fibre: 'lin_paille_dt', lentille_puy: 'lentille_puy', haricots_verts: 'haricots_verts_dt', petits_pois: 'petits_pois_dt', prairie_foin: 'prairie_foin_dt' }[ck] || ck;
-    // Prices ending in _dt are in EUR/dt — multiply by 10 to get EUR/t
+    // Prix en EUR/dt pour lin, haricots, petits pois, prairie (multiply x10 to get EUR/t)
+    // betterave_dt16 et pomme_terre sont déjà en EUR/t, ne pas multiplier
+    const PRIX_EN_DT = ['lin_paille_dt', 'haricots_verts_dt', 'petits_pois_dt', 'prairie_foin_dt'];
     const prixRaw = pv[pvKey] || 200;
-    const prix = pvKey.includes('_dt') ? prixRaw * 10 : prixRaw;
+    const prix = PRIX_EN_DT.includes(pvKey) ? prixRaw * 10 : prixRaw;
     const margeT = prix - seuil;
     const pbHa = (rdtT * prix) + aidesCHa;
     const mbHa = pbHa - coHa;

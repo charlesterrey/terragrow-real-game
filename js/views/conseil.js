@@ -1,5 +1,5 @@
 import { chargerExploitation, chargerReferentiel, chargerITK, chargerLeviers, getEtat, sauvegarderEtat } from '../app.js';
-import { filtrerLeviers, appliquerConseil } from '../engine/conseil.js?v=9';
+import { filtrerLeviers, appliquerConseil } from '../engine/conseil.js?v=10';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression } from '../state.js';
 

@@ -1,9 +1,9 @@
 import { chargerToutesExploitations, chargerReferentiel, chargerITK } from '../app.js';
 import { COLORS, applyFinancialDefaults, legendTop } from '../chart-config.js';
-import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=9';
-import { calculerSIGAgrege } from '../engine/sig.js?v=9';
-import { calculerResilience } from '../engine/resilience.js?v=9';
-import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=9';
+import { calculerCoutsProduction, calculerResumeCdP } from '../engine/couts-production.js?v=10';
+import { calculerSIGAgrege } from '../engine/sig.js?v=10';
+import { calculerResilience } from '../engine/resilience.js?v=10';
+import { calculerTresorerieEstimee, calculerIndicateursTreso } from '../engine/tresorerie.js?v=10';
 
 let charts = [];
 

@@ -1,6 +1,6 @@
 // js/views/simulateur.js — Vue simulateur de scénarios (VUE CENTRALE DU JEU)
 import { chargerExploitation, chargerReferentiel, chargerITK, chargerScenarios, getEtat, sauvegarderEtat } from '../app.js';
-import { simulerScenario, calculerSituationComplete } from '../engine/simulation.js?v=9';
+import { simulerScenario, calculerSituationComplete } from '../engine/simulation.js?v=10';
 import { renderStepper, renderStepObjective, renderStepNavigation } from '../components/stepper.js';
 import { setProgression, getScenariosCustom, sauvegarderScenarioCustom, supprimerScenarioCustom } from '../state.js';
 import { initCustomSelects } from '../components/custom-select.js';

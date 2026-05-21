@@ -91,20 +91,20 @@ export function getExploitationIds() {
 // --- Navigation ---
 
 const ROUTES = {
-  'accueil': () => import('./views/accueil.js?v=9'),
-  'decouverte': () => import('./views/decouverte.js?v=9'),
-  'dashboard': () => import('./views/tableau-bord.js?v=9'),
-  'grand-livre': () => import('./views/grand-livre.js?v=9'),
-  'sig': () => import('./views/sig.js?v=9'),
-  'couts-production': () => import('./views/couts-production.js?v=9'),
-  'tresorerie': () => import('./views/tresorerie.js?v=9'),
-  'simulateur': () => import('./views/simulateur.js?v=9'),
-  'conseil': () => import('./views/conseil.js?v=9'),
-  'conseil-dashboard': () => import('./views/conseil-dashboard.js?v=9'),
-  'scenarios': () => import('./views/scenarios.js?v=9'),
-  'comparaison': () => import('./views/comparaison.js?v=9'),
-  'rapport': () => import('./views/rapport.js?v=9'),
-  'fiches-session1': () => import('./views/fiches-session1.js?v=9'),
+  'accueil': () => import('./views/accueil.js?v=10'),
+  'decouverte': () => import('./views/decouverte.js?v=10'),
+  'dashboard': () => import('./views/tableau-bord.js?v=10'),
+  'grand-livre': () => import('./views/grand-livre.js?v=10'),
+  'sig': () => import('./views/sig.js?v=10'),
+  'couts-production': () => import('./views/couts-production.js?v=10'),
+  'tresorerie': () => import('./views/tresorerie.js?v=10'),
+  'simulateur': () => import('./views/simulateur.js?v=10'),
+  'conseil': () => import('./views/conseil.js?v=10'),
+  'conseil-dashboard': () => import('./views/conseil-dashboard.js?v=10'),
+  'scenarios': () => import('./views/scenarios.js?v=10'),
+  'comparaison': () => import('./views/comparaison.js?v=10'),
+  'rapport': () => import('./views/rapport.js?v=10'),
+  'fiches-session1': () => import('./views/fiches-session1.js?v=10'),
 };
 
 let currentView = null;
